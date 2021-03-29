@@ -11,35 +11,16 @@ Description:
 (() => {
     //Font
     g.setFont("Vector", 20);
-    //variagbrid.Gews
+    //variabangle.Sensorss
     let acclS, bttS, compssS, gpsS, hrmS, stepS; //Strings
     let accelN, compssN, gpsN, hrmN, stepN; //Num
-    //Constants for redagbrid.Gew code
+
+    let data = [0, 0, 0, 0, 0, 0];
+    //Constants for redabangle.Sensors code
     let storage = require('Storage');
     let deCom = require('heatshrink');
 
 
-
-    function draw() {
-        console.log("N word");
-        g.setColor(-1);
-
-        g.drawImage(storage.read("conectionIcon.icon"), this.x + 1, this.y + 1);
-
-    }
-
-
-    function changedConnectionState() {
-        WIDGETS["gbrid.Gew"].draw();
-        g.flip(); // turns screen on
-    }
-
-    function reload() {
-        console.log("REALOADING");
-        WIDGETS["gbrid.Gew"].width = 0;
-        WIDGETS["gbrid.Gew"].draw = () => {};
-
-    }
 
 
     //Sensors code
@@ -54,6 +35,7 @@ Description:
         setInterval(function () {
 
             acclS = accelN.x + "##" + accelN.y + "##" + accelN.z + "\n" + accelN.diff + "##" + accelN.mag;
+            data[3] = accelN;
         }, 2 * 1000);
 
     }
@@ -63,7 +45,7 @@ Description:
         setInterval(function () {
 
             bttS = E.getBattery(); //return String
-
+            data[2] = E.getBattery();
         }, 15 * 1000);
 
     }
@@ -83,7 +65,7 @@ Description:
 
             compssS = "A: " + compssN.x + " ## " + compssN.y + " ## " + compssN.z + "\n" + "B: " + compssN.dx +
                 " ## " + compssN.dy + " ## " + compssN.dz + " ## " + compssN.heading + "\n" + "C: " + compssN.heading; //return String
-
+            data[4] = compssN;
         }, 2 * 1000);
 
     }
@@ -103,7 +85,7 @@ Description:
 
             gpsS = "A: " + gpsN.lat + " ## " + gpsN.lon + " ## " + gpsN.alt + "\n" + "B: " + gpsN.speed + " ## " + gpsN.course + " ## " + gpsN.time + "\n" +
                 "C: " + gpsN.satellites + " ## " + gpsN.fix; //return String
-
+            data[5] = gpsN;
         }, 2 * 1000);
     }
 
@@ -139,19 +121,25 @@ Description:
 
         }
 
-        Bangle.setHRMPower(1);
 
-        Bangle.on('HRM', function (hrm) {
-            hrmN = hrm.bpm;
-
-        });
 
 
         setInterval(function () {
 
-            hrmN = normalize(hrmN);
-            var roundedRate = parseFloat(hrmN).toFixed(2);
-            hrmS = String.valueOf(roundedRate); //return String
+            if (!isNaN(hrmN)) {
+
+
+                hrmN = normalize(hrmN);
+                var roundedRate = parseFloat(hrmN).toFixed(2);
+                hrmS = String.valueOf(roundedRate); //return String
+                //console.log("array----->" + msr);
+                data[0] = roundedRate;
+
+            }
+
+
+
+
 
         }, 2 * 1000);
 
@@ -169,13 +157,22 @@ Description:
         setInterval(function () {
 
             stepS = String.valueOf(stepN); //return String
-
+            data[1] = stepN;
         }, 2 * 1000);
 
 
     }
 
     function initSensors() {
+
+        //need power control
+        Bangle.setHRMPower(1);
+
+        Bangle.on('HRM', function (hrm) {
+            hrmN = hrm.bpm;
+
+
+        });
         console.log("Sensors are being Init....");
         accel();
         btt();
@@ -186,15 +183,30 @@ Description:
 
     }
 
+
+
+    function draw() {
+        g.setColor(-1);
+        g.drawImage(storage.read("conectionIcon.icon"), this.x + 1, this.y + 1);
+
+    }
+
+
     // Finally add widget
-    WIDGETS["gbrid.Gew"] = {
+    WIDGETS["bangle.Sensors"] = {
         area: "tl",
-        width: 24,
+        width: 10,
         draw: draw,
-        reload: reload
     };
-    reload();
+
     initSensors();
+    // Bangle.drawWidgets();
     Terminal.println("Running Bangle-Widget");
 
+    setInterval(function () {
+        //console.log("---------------------------------------------------------------");
+        //console.log(data);
+        //Bluetooth.println(data[0]);
+        Bluetooth.println(JSON.stringify(data));
+    }, 5 * 1000);
 })(); //End of Widget
