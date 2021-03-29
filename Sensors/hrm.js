@@ -1,5 +1,11 @@
 //240x240px
-
+/**
+ 
+ { "bpm": number,             // Beats per minute
+  "confidence": number,      // 0-100 percentage confidence in the heart rate
+  "raw": Uint8Array,         // raw samples from heart rate monitor
+}
+ */
 
 //  var remainder = index % array.length;
 var rate = 0;
