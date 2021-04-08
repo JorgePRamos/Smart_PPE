@@ -1,6 +1,6 @@
 //console.log("Running..545445454454...");
-src="https://www.puck-js.com/puck.js";
-console.log("Updated back");
+//src="https://www.puck-js.com/puck.js";
+console.log("Updated back2");
 let input;
 // When we click the connect button...
 var connection;
@@ -37,4 +37,3 @@ document.getElementById("btnConnect").addEventListener("click", function() {
     
 
   }
-

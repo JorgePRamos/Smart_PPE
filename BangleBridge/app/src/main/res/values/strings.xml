@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">BangleBridge</string>
+    <string name="devices">Bangle.js</string>
+
+    <string name="location_permission_title">Location permission required</string>
+    <string name="location_permission_message">Bluetooth LE Scan requires permission of location information</string>
+
+    <string name="location_denied_title">Location permission denied</string>
+    <string name="location_denied_message">As location permission has not been granted, this app cannot scan for Bluetooth LE devices.</string>
+    <string name="pairing_request">PAIRING requested\n-> Perform pairing steps. Connect again</string>
+
+</resources>
