@@ -15,6 +15,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.method.ScrollingMovementMethod;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -169,7 +170,13 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
             sendText.setHint(hexEnabled ? "HEX mode" : "");
             item.setChecked(hexEnabled);
             return true;
-        } else {
+        } else if (id == R.id.TESTPAGE) {//Enable // Disable hex mode
+            Log.d("TestDebugging", "--->INTETN");
+            Intent myIntent = new Intent(this.getContext(), DeviceData.class);
+            startActivity(myIntent);
+            return true;
+        }
+        else {
             return super.onOptionsItemSelected(item);
         }
     }
@@ -263,6 +270,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
 
     @Override
     public void onSerialRead(byte[] data) {
+        Log.d("TestDebugging","DATA Recivida");
         receive(data);
     }
 
