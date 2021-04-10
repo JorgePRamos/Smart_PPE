@@ -118,6 +118,8 @@ final class TextUtil {
             enabled = enable;
         }
 
+
+
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
         }

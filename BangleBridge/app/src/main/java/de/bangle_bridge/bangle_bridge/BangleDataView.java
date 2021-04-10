@@ -28,9 +28,17 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-public class DeviceData extends Fragment implements SerialListener{
+public class BangleDataView extends AppCompatActivity implements SerialListener{
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_bangle_data_view);
+        Intent intent = getIntent();
+    }
 
     private String deviceAddress;
     private SerialService service;
@@ -40,28 +48,22 @@ public class DeviceData extends Fragment implements SerialListener{
     private String newline = TextUtil.newline_crlf;
 
 
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Intent intent = getIntent();
-        String value = intent.getStringExtra("key"); //if it's a string you stored.
-    }
-
 
     private void receive(byte[] data) {//recievoing messages from device
 
-            String msg = new String(data);//Get recieved adata from arguments to strin g
-            if(newline.equals(TextUtil.newline_crlf) && msg.length() > 0) {//Look fro end of the line
-                // don't show CR as ^M if directly before LF
-                msg = msg.replace(TextUtil.newline_crlf, TextUtil.newline_lf);
-                // special handling if CR and LF come in separate fragments
-                if (pendingNewline && msg.charAt(0) == '\n') {
-                    Editable edt = receiveText.getEditableText();
-                    if (edt != null && edt.length() > 1)
-                        edt.replace(edt.length() - 2, edt.length(), "");
-                }
-                pendingNewline = msg.charAt(msg.length() - 1) == '\r';
+        String msg = new String(data);//Get recieved adata from arguments to strin g
+        if(newline.equals(TextUtil.newline_crlf) && msg.length() > 0) {//Look fro end of the line
+            // don't show CR as ^M if directly before LF
+            msg = msg.replace(TextUtil.newline_crlf, TextUtil.newline_lf);
+            // special handling if CR and LF come in separate fragments
+            if (pendingNewline && msg.charAt(0) == '\n') {
+                Editable edt = receiveText.getEditableText();
+                if (edt != null && edt.length() > 1)
+                    edt.replace(edt.length() - 2, edt.length(), "");
             }
-            receiveText.append(TextUtil.toCaretString(msg, newline.length() != 0));
+            pendingNewline = msg.charAt(msg.length() - 1) == '\r';
+        }
+        receiveText.append(TextUtil.toCaretString(msg, newline.length() != 0));
 
     }
 
@@ -77,7 +79,13 @@ public class DeviceData extends Fragment implements SerialListener{
         receiveText.append(spn);
     }
 
-
+    @Override
+    public void onStop() {
+        Log.d("TestDebugging", "LLAMADA onStop2");
+        /*if(service != null && !getActivity().isChangingConfigurations())
+            service.detach();*/
+        super.onStop();
+    }
 
 
     // SerialListener Implemntation
@@ -103,4 +111,13 @@ public class DeviceData extends Fragment implements SerialListener{
         disconnect();
     }
 
+    /**
+     * Called when pointer capture is enabled or disabled for the current window.
+     *
+     * @param hasCapture True if the window has pointer capture.
+     */
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
+    }
 }
