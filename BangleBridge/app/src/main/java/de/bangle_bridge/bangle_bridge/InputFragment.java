@@ -217,7 +217,7 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
     String onBuild = "";
     public  void jsonWatcher(String in){
         String out = "";
-        if (in.contains("]")){
+        if (in.contains("#")){
             onBuild += in;
             Log.d("JsonWatchAdd", onBuild);
             arr.add(onBuild);

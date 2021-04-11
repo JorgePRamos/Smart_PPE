@@ -1,6 +1,11 @@
-package de.bangle_bridge.bangle_bridge;
+package data;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.time.LocalTime;
+
+import static java.nio.file.Paths.get;
 
 public class Measurement {
 
@@ -78,4 +83,25 @@ public class Measurement {
     public void setTime(LocalTime time) {
         this.time = time;
     }
+
+public Measurement fromJasonToMeas(String input){
+    Measurement nm = null;
+    Double[] acc = {0.0,0.0,0.0,0.0,0.0}; // acc = {x,y,z,diff,mag}
+    Double[] com = {0.0,0.0,0.0,0.0,0.0,0.0,0.0};// mag = {x,y,z,dx,dy,dz,heading}
+    Double[] gps = {0.0,0.0,0.0,0.0}; // gps = {lat,lon,alt,speed,etc}
+        input = input.replace("#", "");//Clean end of string symbol
+    try {
+        JSONObject mess = new JSONObject(input);
+
+         nm = new Measurement(mess.getDouble("hrm"),mess.getInt("step"),mess.getInt("batt"),mess.get("acc"),mess.get("mag"),mess.get("com"),mess.get("gps"));
+    } catch (JSONException e) {
+        e.printStackTrace();
+    }
+
+    return nm;
+
+}
+
+
+
 }

@@ -207,6 +207,7 @@ Description:
         //console.log("---------------------------------------------------------------");
         //console.log(data);
         //Bluetooth.println(data[0]);
-        Bluetooth.println(JSON.stringify(data));
+        var measurement = {hrm: data[0],step: data[1],batt: data[2],acc: data[3],com: data[4],gps: data[5]}
+        Bluetooth.println(JSON.stringify(measurement)+"#");
     }, 5 * 1000);
 })(); //End of Widget
