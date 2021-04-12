@@ -3,15 +3,11 @@ package data;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.time.LocalTime;
-
-import static java.nio.file.Paths.get;
-
 public class Measurement {
 
     private double hrm;
 
-    public Measurement(double hrm, Integer steps, Integer btt, Double[] acc, Double[] com, Double[] gps, LocalTime time) {
+    public Measurement(double hrm, Integer steps, Integer btt, Accelerometer acc, Compass com, Gps gps, String time) {
         this.hrm = hrm;
         this.steps = steps;
         this.btt = btt;
@@ -23,10 +19,10 @@ public class Measurement {
 
     private Integer steps;
     private Integer btt;
-    private Double[] acc = {0.0,0.0,0.0,0.0,0.0}; // acc = {x,y,z,diff,mag}
-    private Double[] com = {0.0,0.0,0.0,0.0,0.0,0.0,0.0};// mag = {x,y,z,dx,dy,dz,heading}
-    private Double[] gps = {0.0,0.0,0.0,0.0}; // gps = {lat,lon,alt,speed,etc}
-    private LocalTime time;
+    Accelerometer acc = new Accelerometer();
+    Compass com = new Compass();
+    Gps gps = new Gps();
+    private String time;
 
     public double getHrm() {
         return hrm;
@@ -52,48 +48,62 @@ public class Measurement {
         this.btt = btt;
     }
 
-    public Double[] getAcc() {
+    public Accelerometer getAcc() {
         return acc;
     }
 
-    public void setAcc(Double[] acc) {
+    public void setAcc(Accelerometer acc) {
         this.acc = acc;
     }
 
-    public Double[] getCom() {
+    public Compass getCom() {
         return com;
     }
 
-    public void setCom(Double[] com) {
+    public void setCom(Compass com) {
         this.com = com;
     }
 
-    public Double[] getGps() {
+    public Gps getGps() {
         return gps;
     }
 
-    public void setGps(Double[] gps) {
+    public void setGps(Gps gps) {
         this.gps = gps;
     }
 
-    public LocalTime getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(LocalTime time) {
+    public void setTime(String time) {
         this.time = time;
     }
 
-public Measurement fromJasonToMeas(String input){
+    public static  Measurement fromJsonToObj(String input){
     Measurement nm = null;
     Double[] acc = {0.0,0.0,0.0,0.0,0.0}; // acc = {x,y,z,diff,mag}
     Double[] com = {0.0,0.0,0.0,0.0,0.0,0.0,0.0};// mag = {x,y,z,dx,dy,dz,heading}
     Double[] gps = {0.0,0.0,0.0,0.0}; // gps = {lat,lon,alt,speed,etc}
         input = input.replace("#", "");//Clean end of string symbol
     try {
+        String objectJson = "";
         JSONObject mess = new JSONObject(input);
+        JSONObject mess2 = new JSONObject(objectJson);
 
-         nm = new Measurement(mess.getDouble("hrm"),mess.getInt("step"),mess.getInt("batt"),mess.get("acc"),mess.get("mag"),mess.get("com"),mess.get("gps"));
+        Object o1 = mess.get("acc");
+        objectJson = o1.toString();
+        Accelerometer accTemp = new Accelerometer(mess2.getDouble("x"),mess2.getDouble("y"),mess2.getDouble("z"),mess2.getDouble("diff"),mess2.getDouble("mag"));
+        Object o2 = mess.get("com");
+        objectJson = o2.toString();
+        Compass comTemp = new Compass(mess2.getDouble("x"),mess2.getDouble("y"),mess2.getDouble("z"),mess2.getDouble("dx"),mess2.getDouble("dy"),mess2.getDouble("dz"),mess2.getDouble("heading"));
+        Object o3 = mess.get("gps");
+        objectJson = o3.toString();
+        Gps gpstemp = new Gps(mess2.getDouble("lat"),mess2.getDouble("lon"),mess2.getDouble("alt"),mess2.getDouble("speed"));
+
+
+
+         nm = new Measurement(mess.getDouble("hrm"),mess.getInt("step"),mess.getInt("batt"),accTemp,comTemp,gpstemp,(mess2.getString("time")));
     } catch (JSONException e) {
         e.printStackTrace();
     }

@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Parcelable;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -28,7 +29,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+
 import java.util.ArrayList;
+
+import data.Measurement;
+import data.Model;
 
 public class InputFragment extends Fragment implements ServiceConnection, SerialListener {
 
@@ -47,7 +52,8 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
     private boolean hexEnabled = false;
     private boolean pendingNewline = false;
     private String newline = TextUtil.newline_crlf;
-    private ArrayList<String> arr = new ArrayList<String>();
+    public Model model = new Model();
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -184,7 +190,7 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
         } else if (id == R.id.TESTPAGE) {//Enable // Disable hex mode
             Log.d("TestDebugging", "--->INTETN");
             Intent myIntent = new Intent(this.getContext(), BangleDataView.class);
-
+            myIntent.putExtra("Model",model);
             startActivity(myIntent);
             return true;
         }
@@ -216,11 +222,13 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
 
     String onBuild = "";
     public  void jsonWatcher(String in){
-        String out = "";
+
+
         if (in.contains("#")){
             onBuild += in;
             Log.d("JsonWatchAdd", onBuild);
-            arr.add(onBuild);
+            Measurement out  =  Measurement.fromJsonToObj(in);
+            model.measurements.add(out);
             onBuild = "";
         }else {
 

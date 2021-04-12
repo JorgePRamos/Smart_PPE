@@ -10,5 +10,6 @@
     <string name="pairing_request">PAIRING requested\n-> Perform pairing steps. Connect again</string>
     <string name="jsonOut">TextView</string>
     <string name="bangleOut">TextView</string>
+    <string name="button">Button</string>
 
 </resources>

@@ -20,6 +20,15 @@ public class Compass {
         this.dz = dz;
         this.heading = heading;
     }
+    public Compass() {
+        this.x = 0.0;
+        this.y = 0.0;
+        this.z = 0.0;
+        this.dx = 0.0;
+        this.dy = 0.0;
+        this.dz = 0.0;
+        this.heading = 0.0;
+    }
 
     public Double getX() {
         return x;

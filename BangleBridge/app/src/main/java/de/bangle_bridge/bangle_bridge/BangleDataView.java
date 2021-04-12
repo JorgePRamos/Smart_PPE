@@ -31,13 +31,17 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-public class BangleDataView extends AppCompatActivity implements SerialListener{
+import data.Measurement;
+import data.Model;
 
+public class BangleDataView extends AppCompatActivity implements SerialListener{
+    Model model = null;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bangle_data_view);
         Intent intent = getIntent();
+        model = (Model) intent.getSerializableExtra("Model");
     }
 
     private String deviceAddress;
@@ -47,7 +51,17 @@ public class BangleDataView extends AppCompatActivity implements SerialListener{
     private boolean pendingNewline = false;
     private String newline = TextUtil.newline_crlf;
 
+    public void showdata(View v){
 
+        TextView textBox = (TextView)findViewById(R.id.bangleOut);/*
+        for(Measurement m : model.measurements){
+           // textBox.setText(m.toString());
+            Log.d("TestWatcher",m.toString());
+        }*/
+        Integer algo =  model.measurements.size();
+        textBox.setText(algo.toString());
+
+    }
 
     private void receive(byte[] data) {//recievoing messages from device
 

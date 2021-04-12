@@ -15,6 +15,13 @@ public class Accelerometer {
         this.diff = diff;
         this.mag = mag;
     }
+    public Accelerometer(){
+        this.x = 0.0;
+        this.y = 0.0;
+        this.z = 0.0;
+        this.diff = 0.0;
+        this.mag = 0.0;
+    }
 
 
 
