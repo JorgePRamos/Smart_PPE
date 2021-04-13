@@ -51,17 +51,6 @@ public class BangleDataView extends AppCompatActivity implements SerialListener{
     private boolean pendingNewline = false;
     private String newline = TextUtil.newline_crlf;
 
-    public void showdata(View v){
-
-        TextView textBox = (TextView)findViewById(R.id.bangleOut);/*
-        for(Measurement m : model.measurements){
-           // textBox.setText(m.toString());
-            Log.d("TestWatcher",m.toString());
-        }*/
-        Integer algo =  model.measurements.size();
-        textBox.setText(algo.toString());
-
-    }
 
     private void receive(byte[] data) {//recievoing messages from device
 

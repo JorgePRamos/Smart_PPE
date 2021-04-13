@@ -23,6 +23,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -43,7 +44,8 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
     private SerialService service;
 
     private TextView receiveText;
-    public  TextView blangleText;
+    public  TextView textTest;
+    public Button testButton;
     private TextView sendText;
     private TextUtil.HexWatcher hexWatcher;
 
@@ -141,25 +143,39 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
         View view = inflater.inflate(R.layout.fragment_input, container, false);//Get XML of terminal
         //Recieved text box
         receiveText = view.findViewById(R.id.receive_text); // Text box for recived text
-
         receiveText.setTextColor(getResources().getColor(R.color.colorRecieveText)); //Color of text
         receiveText.setMovementMethod(ScrollingMovementMethod.getInstance()); // set text scroll
-        //Send text box
-        sendText = view.findViewById(R.id.send_text);
-        hexWatcher = new TextUtil.HexWatcher(sendText);//check for hex
-        hexWatcher.enable(hexEnabled);
-        sendText.addTextChangedListener(hexWatcher);
-        sendText.setHint(hexEnabled ? "HEX mode" : "");
-        //Send btt
+        //Test text box
+        testButton = view.findViewById(R.id.elbutton);
+
+        testButton.setOnClickListener(v -> showTestData(view));//On click send text to text box
+
 
 
         return view;
+    }
+    public void showTestData(View v){
+        int cont = 0;
+        TextView textBox = (TextView) v.findViewById(R.id.showText);
+        Log.d("TestWatcher", "Me clickean");
+        for(Measurement m : model.measurements){
+            cont ++;
+            Log.d("TestWatcher", "Loopeo");
+            if(m != null){
+                Log.d("TestWatcher", m.toString());
+                textBox.setText(m.toString());
+
+
+            }
+
+        }
+
     }
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) { //Change drop Down menu to terminal options
         inflater.inflate(R.menu.menu_terminal, menu);
-        menu.findItem(R.id.hex).setChecked(hexEnabled);//By default check hexEnabled
+
     }
 
     @Override
@@ -180,13 +196,6 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
             });
             builder.create().show();
             return true;
-        } else if (id == R.id.hex) {//Enable // Disable hex mode
-            hexEnabled = !hexEnabled;
-            sendText.setText("");
-            hexWatcher.enable(hexEnabled);
-            sendText.setHint(hexEnabled ? "HEX mode" : "");
-            item.setChecked(hexEnabled);
-            return true;
         } else if (id == R.id.TESTPAGE) {//Enable // Disable hex mode
             Log.d("TestDebugging", "--->INTETN");
             Intent myIntent = new Intent(this.getContext(), BangleDataView.class);
@@ -198,7 +207,6 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
             return super.onOptionsItemSelected(item);
         }
     }
-
 
 
     private void connect() {
@@ -223,11 +231,12 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
     String onBuild = "";
     public  void jsonWatcher(String in){
 
-
+        Log.d("JsonNull","IN --> "+in);
         if (in.contains("#")){
             onBuild += in;
             Log.d("JsonWatchAdd", onBuild);
-            Measurement out  =  Measurement.fromJsonToObj(in);
+            Measurement out  =  Measurement.fromJsonToObj(onBuild);
+            Log.d("JsonNull",out.toString());
             model.measurements.add(out);
             onBuild = "";
         }else {

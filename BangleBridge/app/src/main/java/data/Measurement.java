@@ -1,5 +1,7 @@
 package data;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -81,30 +83,35 @@ public class Measurement {
     }
 
     public static  Measurement fromJsonToObj(String input){
+        Log.d("JsonNull","fromJsonToObj ONBUILD--> "+input);
     Measurement nm = null;
     Double[] acc = {0.0,0.0,0.0,0.0,0.0}; // acc = {x,y,z,diff,mag}
     Double[] com = {0.0,0.0,0.0,0.0,0.0,0.0,0.0};// mag = {x,y,z,dx,dy,dz,heading}
     Double[] gps = {0.0,0.0,0.0,0.0}; // gps = {lat,lon,alt,speed,etc}
-        input = input.replace("#", "");//Clean end of string symbol
+       String  cum = input.replace("#", "");//Clean end of string symbol
     try {
         String objectJson = "";
-        JSONObject mess = new JSONObject(input);
-        JSONObject mess2 = new JSONObject(objectJson);
+        JSONObject mess = new JSONObject(cum);
+        
 
         Object o1 = mess.get("acc");
         objectJson = o1.toString();
+        JSONObject mess2 = new JSONObject(objectJson);
         Accelerometer accTemp = new Accelerometer(mess2.getDouble("x"),mess2.getDouble("y"),mess2.getDouble("z"),mess2.getDouble("diff"),mess2.getDouble("mag"));
         Object o2 = mess.get("com");
         objectJson = o2.toString();
-        Compass comTemp = new Compass(mess2.getDouble("x"),mess2.getDouble("y"),mess2.getDouble("z"),mess2.getDouble("dx"),mess2.getDouble("dy"),mess2.getDouble("dz"),mess2.getDouble("heading"));
+        JSONObject mess3 = new JSONObject(objectJson);
+        Compass comTemp = new Compass(mess3.getDouble("x"),mess3.getDouble("y"),mess3.getDouble("z"),mess3.getDouble("dx"),mess3.getDouble("dy"),mess3.getDouble("dz"),mess3.getDouble("heading"));
         Object o3 = mess.get("gps");
         objectJson = o3.toString();
-        Gps gpstemp = new Gps(mess2.getDouble("lat"),mess2.getDouble("lon"),mess2.getDouble("alt"),mess2.getDouble("speed"));
+        JSONObject mess4 = new JSONObject(objectJson);
+        Gps gpstemp = new Gps(mess4.getDouble("lat"),mess4.getDouble("lon"),mess4.getDouble("alt"),mess4.getDouble("speed"));
 
 
 
-         nm = new Measurement(mess.getDouble("hrm"),mess.getInt("step"),mess.getInt("batt"),accTemp,comTemp,gpstemp,(mess2.getString("time")));
+         nm = new Measurement(mess.getDouble("hrm"),mess.getInt("step"),mess.getInt("batt"),accTemp,comTemp,gpstemp,(mess4.getString("time")));
     } catch (JSONException e) {
+        Log.d("JsonNull","ERROR TRY CATCH *A");
         e.printStackTrace();
     }
 
@@ -112,6 +119,16 @@ public class Measurement {
 
 }
 
-
-
+    @Override
+    public String toString() {
+        return "Measurement To string{" +
+                "hrm=" + hrm +
+                ", steps=" + steps +
+                ", btt=" + btt +
+                ", acc=" + acc +
+                ", com=" + com +
+                ", gps=" + gps +
+                ", time='" + time + '\'' +
+                '}';
+    }
 }
