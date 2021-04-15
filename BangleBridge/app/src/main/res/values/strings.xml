@@ -11,5 +11,7 @@
     <string name="jsonOut">TextView</string>
     <string name="bangleOut">TextView</string>
     <string name="button">Button</string>
+    <string name="scan">Scan</string>
+    <string name="stop">Stop</string>
 
 </resources>

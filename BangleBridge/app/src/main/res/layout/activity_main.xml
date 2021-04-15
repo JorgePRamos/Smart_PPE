@@ -23,6 +23,18 @@
         android:id="@+id/fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" >
+
+    </RelativeLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="355dp"
+        android:layout_height="302dp"
+        app:layout_anchor="@+id/fragment"
+        android:background="@drawable/baseline_search_24"
+        app:layout_anchorGravity="center">
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

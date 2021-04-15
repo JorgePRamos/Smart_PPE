@@ -105,7 +105,7 @@ public class DevicesFragment extends ListFragment {
         setListAdapter(null);
         View header = getActivity().getLayoutInflater().inflate(R.layout.device_list_header, null, false);//get xml
         getListView().addHeaderView(header, null, false);//add xml
-        setEmptyText("initializing...");
+       setEmptyText("");
         ((TextView) getListView().getEmptyView()).setTextSize(18);
         setListAdapter(listAdapter);
     }
@@ -127,7 +127,7 @@ public class DevicesFragment extends ListFragment {
         super.onResume();
         getActivity().registerReceiver(discoveryBroadcastReceiver, discoveryIntentFilter);//Refresh list
         if(bluetoothAdapter == null) {
-            setEmptyText("<bluetooth LE not supported>");//ADAPTER NULL
+           // setEmptyText("<bluetooth LE not supported>");//ADAPTER NULL
         } else if(!bluetoothAdapter.isEnabled()) {//Adapter disable
             setEmptyText("<bluetooth is disabled>");
             if (menu != null) {
@@ -136,7 +136,7 @@ public class DevicesFragment extends ListFragment {
                 menu.findItem(R.id.ble_scan).setEnabled(false);
             }
         } else {
-            setEmptyText("<use SCAN to refresh devices>");//Everything ok Ask for Scan
+           // setEmptyText("<use SCAN to refresh devices>");//Everything ok Ask for Scan
             if (menu != null)
                 menu.findItem(R.id.ble_scan).setEnabled(true);//Set Scan btt to enable
         }
@@ -211,7 +211,7 @@ public class DevicesFragment extends ListFragment {
         //Start scanning after getting permissions
         listItems.clear();
         listAdapter.notifyDataSetChanged();
-        setEmptyText("<scanning...>");
+        setEmptyText("");//scanning
         menu.findItem(R.id.ble_scan).setVisible(false);
         menu.findItem(R.id.ble_scan_stop).setVisible(true);
         //Async scan to prevent UI Block
