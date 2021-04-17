@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
+import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -79,6 +80,7 @@ public class DevicesFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {//Creation of view
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
         if(getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH)) //BT manager + adapter
             bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         listAdapter = new ArrayAdapter<BluetoothDevice>(getActivity(), 0, listItems) {
@@ -89,6 +91,8 @@ public class DevicesFragment extends ListFragment {
                     view = getActivity().getLayoutInflater().inflate(R.layout.device_list_item, parent, false);
                 TextView text1 = view.findViewById(R.id.text1);//text1 and text2 in device_list_item layout
                 TextView text2 = view.findViewById(R.id.text2);
+
+
                 if(device.getName() == null || device.getName().isEmpty())//text1 --> set to BT devices name if possible
                     text1.setText("<unnamed>");                           //text2 --> set to address
                 else
@@ -125,6 +129,7 @@ public class DevicesFragment extends ListFragment {
     @Override
     public void onResume() {
         super.onResume();
+
         getActivity().registerReceiver(discoveryBroadcastReceiver, discoveryIntentFilter);//Refresh list
         if(bluetoothAdapter == null) {
            // setEmptyText("<bluetooth LE not supported>");//ADAPTER NULL

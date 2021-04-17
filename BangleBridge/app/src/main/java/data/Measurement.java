@@ -88,10 +88,10 @@ public class Measurement {
     Double[] acc = {0.0,0.0,0.0,0.0,0.0}; // acc = {x,y,z,diff,mag}
     Double[] com = {0.0,0.0,0.0,0.0,0.0,0.0,0.0};// mag = {x,y,z,dx,dy,dz,heading}
     Double[] gps = {0.0,0.0,0.0,0.0}; // gps = {lat,lon,alt,speed,etc}
-       String  cum = input.replace("#", "");//Clean end of string symbol
+        input = input.replace("#", "");//Clean end of string symbol
     try {
         String objectJson = "";
-        JSONObject mess = new JSONObject(cum);
+        JSONObject mess = new JSONObject(input);
         
 
         Object o1 = mess.get("acc");
@@ -111,7 +111,7 @@ public class Measurement {
 
          nm = new Measurement(mess.getDouble("hrm"),mess.getInt("step"),mess.getInt("batt"),accTemp,comTemp,gpstemp,(mess4.getString("time")));
     } catch (JSONException e) {
-        Log.d("JsonNull","ERROR TRY CATCH *A");
+
         e.printStackTrace();
     }
 

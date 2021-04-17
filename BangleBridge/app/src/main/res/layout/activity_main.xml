@@ -29,10 +29,12 @@
     </RelativeLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/searchBackG"
         android:layout_width="355dp"
         android:layout_height="302dp"
+        android:background="@drawable/banglebridgelogotransparent"
+        android:alpha="0.35"
         app:layout_anchor="@+id/fragment"
-        android:background="@drawable/baseline_search_24"
         app:layout_anchorGravity="center">
 
     </androidx.constraintlayout.widget.ConstraintLayout>
