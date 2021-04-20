@@ -56,9 +56,9 @@ public class BangleDataView extends AppCompatActivity implements SerialListener{
 
         String msg = new String(data);//Get recieved adata from arguments to strin g
         if(newline.equals(TextUtil.newline_crlf) && msg.length() > 0) {//Look fro end of the line
-            // don't show CR as ^M if directly before LF
+            //retorno de linea CR
             msg = msg.replace(TextUtil.newline_crlf, TextUtil.newline_lf);
-            // special handling if CR and LF come in separate fragments
+            // CR + LF
             if (pendingNewline && msg.charAt(0) == '\n') {
                 Editable edt = receiveText.getEditableText();
                 if (edt != null && edt.length() > 1)

@@ -1,5 +1,7 @@
 package de.bangle_bridge.bangle_bridge;
 import com.github.mikephil.charting.charts.LineChart;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.softmoore.android.graphlib.Function;
 import com.softmoore.android.graphlib.Graph;
 import com.softmoore.android.graphlib.GraphView;
@@ -13,6 +15,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Parcelable;
@@ -33,6 +37,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import android.graphics.Color;
 import android.content.Context;
@@ -45,6 +50,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -56,15 +62,20 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 
 import data.Measurement;
 import data.Model;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class InputFragment extends Fragment implements ServiceConnection, SerialListener {
 
-    private enum Connected { False, Pending, True }
+    
 
     private String deviceAddress;
     private SerialService service;
@@ -72,7 +83,7 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
     private LineChart mChart;
     private Thread thread;
     private boolean plotData = true;
-
+    private enum StateOfConnection { False, Pending, True }
 
     private TextView receiveText;
     public  TextView textTest;
@@ -80,7 +91,7 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
     private TextView sendText;
     private TextUtil.HexWatcher hexWatcher;
     private TextView hrmMonitor;
-    private Connected connected = Connected.False;
+    private StateOfConnection connected = StateOfConnection.False;
     private boolean initialStart = true;
     private boolean hexEnabled = false;
     private boolean pendingNewline = false;
@@ -91,6 +102,7 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        loadData();
         setHasOptionsMenu(true);
         setRetainInstance(true);
         deviceAddress = getArguments().getString("device");//get arguments from intent bundle
@@ -102,7 +114,8 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
     @Override
     public void onDestroy() {
         Log.d("TestDebugging", "LLAMADA onDestroy");
-        if (connected != Connected.False)
+        saveData();
+        if (connected != StateOfConnection.False)
             disconnect();
         getActivity().stopService(new Intent(getActivity(), SerialService.class));
         super.onDestroy();
@@ -112,10 +125,18 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
     public void onStart() {
         Log.d("TestDebugging", "LLAMADA onStart");
         super.onStart();
+
+
         if(service != null)
             service.attach(this);
         else
             getActivity().startService(new Intent(getActivity(), SerialService.class)); // prevents service destroy on unbind from recreated activity caused by orientation change
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        saveData();
     }
 
     @Override
@@ -141,9 +162,12 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
         super.onDetach();
     }
 
+
+
     @Override
     public void onResume() {
         Log.d("TestDebugging", "LLAMADA onResume");
+        loadData();//posible errror
         super.onResume();
         if(initialStart && service != null) {
             initialStart = false;
@@ -166,6 +190,32 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
         Log.d("TestDebugging", "LLAMADA onServiceDisconnected");
         service = null;
     }
+
+    public void saveData(){
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("shared preferences", MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(model.measurements);
+        editor.putString("messurementsList", json);
+        editor.apply();
+
+
+    }
+    public void loadData(){
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("shared preferences", MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString("messurementsList", null);
+        Type type = new TypeToken<HashMap<String,Measurement>>() {}.getType();
+        model.measurements = gson.fromJson(json, type);
+        if (model.measurements == null) {
+            model.measurements = new HashMap<String,Measurement> ();
+        }
+
+    }
+
 
     /*
      * UI
@@ -352,6 +402,33 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
 
     }*/
 
+    private void send(String str) {
+        if(connected != StateOfConnection.True) {//If not conncetted throw textBox alert
+
+            return;
+        }
+        try {
+            String msg;
+            byte[] data;
+            if(hexEnabled) {
+                StringBuilder sb = new StringBuilder();
+                TextUtil.toHexString(sb, TextUtil.fromHexString(str));
+                TextUtil.toHexString(sb, newline.getBytes());
+                msg = sb.toString();
+                data = TextUtil.fromHexString(msg);
+            } else {
+                msg = str;
+                data = (str + newline).getBytes();//Build String with str + \n
+            }
+            SpannableStringBuilder spn = new SpannableStringBuilder(msg+'\n');
+            spn.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorSendText)), 0, spn.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            receiveText.append(spn);//append spawn string to text box
+            service.write(data);//Write my built string
+        } catch (Exception e) {
+            onSerialIoError(e);
+        }
+    }
+
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) { //Change drop Down menu to terminal options
         inflater.inflate(R.menu.menu_terminal, menu);
@@ -395,7 +472,7 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
             BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
             BluetoothDevice device = bluetoothAdapter.getRemoteDevice(deviceAddress);
             status("connecting...");//Sapawn Status String
-            connected = Connected.Pending;//set status as pending With ENun
+            connected = StateOfConnection.Pending;//set status as pending With ENun
             SerialSocket socket = new SerialSocket(getActivity().getApplicationContext(), device);
             service.connect(socket);
         } catch (Exception e) {
@@ -404,13 +481,14 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
     }
 
     private void disconnect() {
-        connected = Connected.False;
+        connected = StateOfConnection.False;
         service.disconnect();
     }
 
     String onBuild = "";
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public  void jsonWatcher(String in){
-
+        Log.d("SavingJson","Nº --> "+model.measurements.size());
         Log.d("JsonNull","IN --> "+in);
         if (in.contains("#")){
             onBuild += in;
@@ -427,7 +505,7 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
                     addEntry(algo);//cambiar
                     plotData = false;
                 }
-                model.measurements.add(out);
+                model.measurements.put((out.getTime().toString()),out);
             }
                 onBuild = "";
 
@@ -442,6 +520,8 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
 
     }
 
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void receive(byte[] data) {//recievoing messages from device
 
         if(hexEnabled) {//Check hex
@@ -474,7 +554,6 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
         }
     }
 
-
     private void status(String str) {//Print Spawneable String on textBox
         SpannableStringBuilder spn = new SpannableStringBuilder(str+'\n');
         spn.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorStatusText)), 0, spn.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -485,7 +564,7 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
     @Override
     public void onSerialConnect() {
         status("connected");
-        connected = Connected.True;
+        connected = StateOfConnection.True;
     }
 
     @Override
