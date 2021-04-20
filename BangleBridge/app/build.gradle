@@ -7,7 +7,7 @@ android {
         minSdkVersion 18
         vectorDrawables.useSupportLibrary true
 
-        applicationId "bangle_bridge"
+        applicationId "de.bangle_bridge.bangle_bridge"
         versionCode 1
         versionName "1.0"
     }
@@ -22,8 +22,15 @@ android {
         }
     }
 }
+repositories {
+    maven { url 'https://jitpack.io' }
+}
 
 dependencies {
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation files('..\\.idea\\libraries\\graphlib.jar')
 }

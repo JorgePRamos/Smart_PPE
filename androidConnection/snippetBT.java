@@ -15,6 +15,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.method.ScrollingMovementMethod;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,6 +37,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
     private SerialService service;
 
     private TextView receiveText;
+    public  TextView blangleText;
     private TextView sendText;
     private TextUtil.HexWatcher hexWatcher;
 
@@ -52,10 +54,12 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
         setHasOptionsMenu(true);
         setRetainInstance(true);
         deviceAddress = getArguments().getString("device");//get arguments from intent bundle
+        Log.d("TestDebugging", "LLAMADA onCreate");
     }
 
     @Override
     public void onDestroy() {
+        Log.d("TestDebugging", "LLAMADA onDestroy");
         if (connected != Connected.False)
             disconnect();
         getActivity().stopService(new Intent(getActivity(), SerialService.class));
@@ -64,6 +68,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
 
     @Override
     public void onStart() {
+        Log.d("TestDebugging", "LLAMADA onStart");
         super.onStart();
         if(service != null)
             service.attach(this);
@@ -73,26 +78,30 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
 
     @Override
     public void onStop() {
-        if(service != null && !getActivity().isChangingConfigurations())
-            service.detach();
+        Log.d("TestDebugging", "LLAMADA onStop");
+        /*if(service != null && !getActivity().isChangingConfigurations())
+            service.detach();*/
         super.onStop();
     }
 
 
     @Override
     public void onAttach(@NonNull Activity activity) { //executesd wehn fragments gets added to activity
+        Log.d("TestDebugging", "LLAMADA onAttach");
         super.onAttach(activity);
         getActivity().bindService(new Intent(getActivity(), SerialService.class), this, Context.BIND_AUTO_CREATE);
     }
 
     @Override
     public void onDetach() {//executesd wehn fragments gets delets from activity
+        Log.d("TestDebugging", "LLAMADA onDetach");
         try { getActivity().unbindService(this); } catch(Exception ignored) {}
         super.onDetach();
     }
 
     @Override
     public void onResume() {
+        Log.d("TestDebugging", "LLAMADA onResume");
         super.onResume();
         if(initialStart && service != null) {
             initialStart = false;
@@ -112,6 +121,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
 
     @Override
     public void onServiceDisconnected(ComponentName name) {
+        Log.d("TestDebugging", "LLAMADA onServiceDisconnected");
         service = null;
     }
 
@@ -124,6 +134,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
         View view = inflater.inflate(R.layout.fragment_terminal, container, false);//Get XML of terminal
         //Recieved text box
         receiveText = view.findViewById(R.id.receive_text); // Text box for recived text
+
         receiveText.setTextColor(getResources().getColor(R.color.colorRecieveText)); //Color of text
         receiveText.setMovementMethod(ScrollingMovementMethod.getInstance()); // set text scroll
         //Send text box
@@ -169,7 +180,14 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
             sendText.setHint(hexEnabled ? "HEX mode" : "");
             item.setChecked(hexEnabled);
             return true;
-        } else {
+        } else if (id == R.id.TESTPAGE) {//Enable // Disable hex mode
+            Log.d("TestDebugging", "--->INTETN");
+            Intent myIntent = new Intent(this.getContext(), BangleDataView.class);
+
+            startActivity(myIntent);
+            return true;
+        }
+        else {
             return super.onOptionsItemSelected(item);
         }
     }
@@ -223,6 +241,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
     }
 
     private void receive(byte[] data) {//recievoing messages from device
+
         if(hexEnabled) {//Check hex
             receiveText.append(TextUtil.toHexString(data) + '\n');
         } else {
@@ -239,6 +258,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
                 pendingNewline = msg.charAt(msg.length() - 1) == '\r';
             }
             receiveText.append(TextUtil.toCaretString(msg, newline.length() != 0));
+
         }
     }
 
@@ -263,6 +283,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
 
     @Override
     public void onSerialRead(byte[] data) {
+        Log.d("TestDebugging","DATA Recivida");
         receive(data);
     }
 
