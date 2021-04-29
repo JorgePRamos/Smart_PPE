@@ -4,6 +4,9 @@ package data;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+import com.mongodb.client.model.InsertManyOptions;
 
 import org.bson.Document;
 
@@ -12,10 +15,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import io.realm.mongodb.RealmResultTask;
 import io.realm.mongodb.User;
 import io.realm.mongodb.mongo.MongoClient;
 import io.realm.mongodb.mongo.MongoCollection;
 import io.realm.mongodb.mongo.MongoDatabase;
+
+import static com.mongodb.client.model.Aggregates.limit;
+import static java.lang.Thread.sleep;
 
 public class Model implements Serializable {
     public HashMap<String,Measurement> measurements = null;
@@ -27,7 +34,7 @@ public class Model implements Serializable {
 
 
 
-    public void mongoUpMap(){
+    public void mongoUpMap(User usr){
         Log.d("MONGO","MOngo upMap");
         MongoClient mongoClient = usr.getMongoClient("mongodb-atlas");
         MongoDatabase mongoDatabase =
@@ -35,32 +42,50 @@ public class Model implements Serializable {
         MongoCollection<Document> mess =
                 mongoDatabase.getCollection("Measurements");
 
-        Document toy = new Document("name", "yoyo") .append("ages", new Document("min", 5));
-        mess.insertOne(toy).getAsync(task -> {
+        //Log.d("MONGO", "ESte es el ultimo---> "+myDoc.toString());
+
+        //RealmResultTask<Document> yoyo =  mess.find().first();
+        //RealmResultTask<Document> yoyo =
+        Measurement mTemp = new Measurement();
+        mess.findOne().getAsync(task -> {
             if (task.isSuccess()) {
-                Log.v("MONGO", "successfully inserted a document with id: " + task.get().getInsertedId());
+                Document result = task.get();
+                Log.v("MONGO", "successfully found a document: " + result);
             } else {
-                Log.e("MONGO", "failed to insert documents with: " + task.getError().getErrorMessage());
+                Log.e("MONGO", "failed to find document with: ", task.getError());
             }
-        });;
-       // Document pepe = (Document) mess.findOne();
-        //Log.d("TimeDebug","DOWN ------>"+pepe.toJson());
-        //System.out.println(pepe.toJson());
-        Log.d("MONGO","TOY --> "+toy);
-         HashMap<String,Measurement> cropedmeasurements = null;
+        });
+
+
+
+        HashMap<String,Measurement> cropedmeasurements = null;
 
         List<Document> documents = new ArrayList<>();
         for(HashMap.Entry<String, Measurement> kv :measurements.entrySet()) {//change to cropped
             Document doc = new Document();
-            doc.put("\"_id\"", kv.getKey());
+            doc.put("_id", kv.getKey());
+            String json =  new Gson().toJson(kv.getValue());
+            Object o = BasicDBObject.parse(json);
+            DBObject dbObj = (DBObject) o;
 
-            doc.put("\"query\"", new Gson().toJson(kv.getValue()));
+            doc.put("query", dbObj);
 
+            Log.d("MONGO", "---> "+doc.toString());
 
 
             documents.add(doc);
         }
-        mess.insertMany(documents);
+
+
+        mess.insertMany(documents).getAsync(task -> {
+            if (task.isSuccess()) {
+                Log.v("MONGO", "successfully inserted a document  " + task.get());
+            } else {
+                Log.e("MONGO", "failed to insert documents with: " + task.getError().getErrorMessage());
+            }
+        });
+
+
 
     }
 

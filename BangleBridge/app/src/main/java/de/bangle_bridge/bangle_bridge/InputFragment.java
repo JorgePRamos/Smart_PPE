@@ -94,74 +94,16 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        model = new Model();
         //loadData();
         setHasOptionsMenu(true);
         setRetainInstance(true);
         deviceAddress = getArguments().getString("device");//get arguments from intent bundle
 
         Realm.init(getContext());
-        Credentials apiCredential = Credentials.apiKey("IMsL2CGxqW3Ks424o1fxiKuLMZkDPrHlr9actpkZdDuAstBMsMf7RXDb29TjTtR8");
-        Credentials credentials = Credentials.emailPassword("someMail@gmail.com","somePass");
-        App app = new App(new AppConfiguration.Builder(appId).build());
-        app.loginAsync(apiCredential, new App.Callback<User>() {
-            @Override
-            public void onResult(App.Result<User> result) {
-                if(result.isSuccess()){
-                  User usr = app.currentUser();
-
-                    Log.v("QUICKSTART", "Successfully authenticated anonymously.");
-                    MongoClient mongoClient = usr.getMongoClient("mongodb-atlas");
-                    MongoDatabase mongoDatabase =
-                            mongoClient.getDatabase("MeasurementsDB");
-                    MongoCollection<Document> mess =
-                            mongoDatabase.getCollection("Measurements");
-
-                    Document toy = new Document("userid", usr.getId()) .append("ages", new Document("min", 5));
-                    mess.insertOne(toy).getAsync(task -> {
-                        if (task.isSuccess()) {
-                            Log.v("Insert", "successfully inserted a document with id: " + task.get().getInsertedId());
-                        } else {
-                            Log.e("Insert", "failed to insert documents with: " + task.getError().getErrorMessage());
-                        }
-                    });
-
-                }
-            }
-        });
-
-        model = new Model();
-        /*
-        Credentials credentials = Credentials.anonymous();
-        app.loginAsync(credentials, result -> {
-            if (result.isSuccess()) {
-                Log.v("QUICKSTART", "Successfully authenticated anonymously.");
-
-                // interact with realm using your user object here
-            } else {
-                Log.e("QUICKSTART", "Failed to log in. Error: " + result.getError());
-            }
-        });
 
 
-        User usr = app.currentUser();
 
-        Log.d("MONGO","CURRENT USER --->"+usr.toString()+"   "+usr.getAccessToken());
-
-        MongoClient mongoClient = usr.getMongoClient("mongodb-atlas");
-        MongoDatabase mongoDatabase =
-                mongoClient.getDatabase("MeasurementsDB");
-        MongoCollection<Document> mess =
-                mongoDatabase.getCollection("Measurements");
-
-        Document toy = new Document("name", "yoyo") .append("ages", new Document("min", 5));
-        mess.insertOne(toy).getAsync(task -> {
-            if (task.isSuccess()) {
-                Log.v("Insert", "successfully inserted a document with id: " + task.get().getInsertedId());
-            } else {
-                Log.e("Insert", "failed to insert documents with: " + task.getError().getErrorMessage());
-            }
-        });
-        */
 
 
 
@@ -275,7 +217,37 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
     //Save/Load data from Shared preferences
     public void syncMongo(View v){
         Log.d("TimeDebug","SUBIENDO A MONGO : )");
-        model.mongoUpMap();
+        Credentials apiCredential = Credentials.apiKey("IMsL2CGxqW3Ks424o1fxiKuLMZkDPrHlr9actpkZdDuAstBMsMf7RXDb29TjTtR8");
+        Credentials credentials = Credentials.emailPassword("someMail@gmail.com","somePass");
+        App app = new App(new AppConfiguration.Builder(appId).build());
+        app.loginAsync(apiCredential, new App.Callback<User>() {
+            @Override
+            public void onResult(App.Result<User> result) {
+                User usr = app.currentUser();
+                model.mongoUpMap(usr);
+                /*if(result.isSuccess()){
+
+
+                    Log.v("QUICKSTART", "Successfully authenticated anonymously.");
+                    MongoClient mongoClient = usr.getMongoClient("mongodb-atlas");
+                    MongoDatabase mongoDatabase =
+                            mongoClient.getDatabase("MeasurementsDB");
+                    MongoCollection<Document> mess =
+                            mongoDatabase.getCollection("Measurements");
+
+                    Document toy = new Document("userid", usr.getId()) .append("ages", new Document("min", 5));
+                    mess.insertOne(toy).getAsync(task -> {
+                        if (task.isSuccess()) {
+                            Log.v("Insert", "successfully inserted a document with id: " + task.get().getInsertedId());
+                        } else {
+                            Log.e("Insert", "failed to insert documents with: " + task.getError().getErrorMessage());
+                        }
+                    });
+
+                }
+            */
+            }
+        });
 
 
 

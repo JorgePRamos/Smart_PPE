@@ -63,8 +63,9 @@ Description:
 
         setInterval(function () {
 
-            compssS = "A: " + compssN.x + " ## " + compssN.y + " ## " + compssN.z + "\n" + "B: " + compssN.dx +
-                " ## " + compssN.dy + " ## " + compssN.dz + " ## " + compssN.heading + "\n" + "C: " + compssN.heading; //return String
+            compssS = "A: " + compssN.x + " ## " + compssN.y + " ## " + compssN.z + "\n" + 
+              "B: " + compssN.dx + " ## " + compssN.dy + " ## " + compssN.dz + " ## " + "\n" +
+              "C: " + compssN.heading; //return String
             data[4] = compssN;
         }, 2 * 1000);
 
@@ -208,6 +209,10 @@ Description:
         //console.log(data);
         //Bluetooth.println(data[0]);
         var measurement = {hrm: data[0],step: data[1],batt: data[2],acc: data[3],com: data[4],gps: data[5]}
+       /* g.clear();
+        g.drawString(compssS,100,200);
+      */
         Bluetooth.println(JSON.stringify(measurement)+"#");
+      
     }, 5 * 1000);
 })(); //End of Widget
