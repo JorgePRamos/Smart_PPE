@@ -49,6 +49,7 @@ import org.bson.Document;
 import java.lang.reflect.Type;
 
 import java.util.HashMap;
+import java.util.TreeMap;
 
 import data.Measurement;
 import data.Model;
@@ -189,7 +190,7 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
     @Override
     public void onResume() {
         Log.d("TestDebugging", "Llamada onResume");
-        loadData();//posible errror
+       // loadData();//posible errror
         super.onResume();
         if (initialStart && service != null) {
             initialStart = false;
@@ -215,42 +216,23 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
 
 
     //Save/Load data from Shared preferences
-    public void syncMongo(View v){
-        Log.d("TimeDebug","SUBIENDO A MONGO : )");
+    public void syncMongo(View v) {
+        Log.d("TimeDebug", "SUBIENDO A MONGO : )");
         Credentials apiCredential = Credentials.apiKey("IMsL2CGxqW3Ks424o1fxiKuLMZkDPrHlr9actpkZdDuAstBMsMf7RXDb29TjTtR8");
-        Credentials credentials = Credentials.emailPassword("someMail@gmail.com","somePass");
+        Credentials credentials = Credentials.emailPassword("someMail@gmail.com", "somePass");
         App app = new App(new AppConfiguration.Builder(appId).build());
         app.loginAsync(apiCredential, new App.Callback<User>() {
             @Override
             public void onResult(App.Result<User> result) {
                 User usr = app.currentUser();
                 model.mongoUpMap(usr);
-                /*if(result.isSuccess()){
 
-
-                    Log.v("QUICKSTART", "Successfully authenticated anonymously.");
-                    MongoClient mongoClient = usr.getMongoClient("mongodb-atlas");
-                    MongoDatabase mongoDatabase =
-                            mongoClient.getDatabase("MeasurementsDB");
-                    MongoCollection<Document> mess =
-                            mongoDatabase.getCollection("Measurements");
-
-                    Document toy = new Document("userid", usr.getId()) .append("ages", new Document("min", 5));
-                    mess.insertOne(toy).getAsync(task -> {
-                        if (task.isSuccess()) {
-                            Log.v("Insert", "successfully inserted a document with id: " + task.get().getInsertedId());
-                        } else {
-                            Log.e("Insert", "failed to insert documents with: " + task.getError().getErrorMessage());
-                        }
-                    });
-
-                }
-            */
             }
+
+            ;
+
+
         });
-
-
-
     }
     public void saveData() {
 
@@ -272,7 +254,7 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
         }.getType();
         model.measurements = gson.fromJson(json, type);
         if (model.measurements == null) {
-            model.measurements = new HashMap<String, Measurement>();
+            model.measurements = new TreeMap<String, Measurement>();
         }
 
     }
@@ -544,6 +526,7 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
                     plotChart = false;
                 }
                 model.measurements.put((out.getTime()), out);
+                model.lastInsert = out;
             }
             onBuild = "";
 

@@ -320,10 +320,10 @@ public class Measurement implements Serializable {
                 String[] time = splited[1].split(":");
                 //float hrs, float min, float sec, int day, int month, int year
                 TimeKey tk = new TimeKey(Float.parseFloat(time[0]), Float.parseFloat(time[1]), Float.parseFloat(time[2]), Integer.parseInt(date[2]), Integer.parseInt(date[1]), Integer.parseInt(date[0]));
-                nm = new Measurement(mess.getDouble("hrm"), mess.getInt("step"), mess.getInt("batt"), accTemp, comTemp, gpstemp, (tk.toString()));
+                nm = new Measurement(mess.getDouble("hrm"), mess.getInt("step"), mess.getInt("batt"), accTemp, comTemp, gpstemp, og);
             }else{
                 TimeKey tk = new TimeKey();
-                nm = new Measurement(mess.getDouble("hrm"), mess.getInt("step"), mess.getInt("batt"), accTemp, comTemp, gpstemp, (tk.toString()));
+                nm = new Measurement(mess.getDouble("hrm"), mess.getInt("step"), mess.getInt("batt"), accTemp, comTemp, gpstemp, og);
             }
         } catch (JSONException e) {
 
