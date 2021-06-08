@@ -5,10 +5,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:screenOrientation="portrait"
     tools:context=".MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
+        android:screenOrientation="portrait"
         android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.Toolbar
@@ -23,7 +25,7 @@
         android:id="@+id/fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
+        android:screenOrientation="portrait"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" >
 
     </RelativeLayout>
@@ -35,6 +37,7 @@
         android:background="@drawable/banglebridgelogotransparent"
         android:alpha="0.35"
         app:layout_anchor="@+id/fragment"
+        android:screenOrientation="portrait"
         app:layout_anchorGravity="center">
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,14 +1,5 @@
 package de.bangle_bridge.bangle_bridge;
 
-import com.github.mikephil.charting.charts.LineChart;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.softmoore.android.graphlib.Function;
-import com.softmoore.android.graphlib.Graph;
-import com.softmoore.android.graphlib.GraphView;
-import com.softmoore.android.graphlib.Label;
-import com.softmoore.android.graphlib.Point;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -18,10 +9,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.Parcelable;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -42,19 +33,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
-import android.graphics.Color;
-import android.content.Context;
-import android.graphics.Color;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
-import android.os.Bundle;
-import android.util.Log;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentActivity;
-
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
@@ -63,27 +41,38 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
-import java.io.IOException;
+import org.bson.Document;
+
 import java.lang.reflect.Type;
+
 import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.TreeMap;
 
 import data.Measurement;
 import data.Model;
+import io.realm.Realm;
+import io.realm.mongodb.App;
+import io.realm.mongodb.AppConfiguration;
+import io.realm.mongodb.Credentials;
+import io.realm.mongodb.User;
+import io.realm.mongodb.mongo.MongoClient;
+import io.realm.mongodb.mongo.MongoCollection;
+import io.realm.mongodb.mongo.MongoDatabase;
 
 import static android.content.Context.MODE_PRIVATE;
 
 public class InputFragment extends Fragment implements ServiceConnection, SerialListener {
-    public Model model = new Model();
+    public Model model = null;
     private Thread thread;
-
+    String appId = "banglebridge-hrhlb";
     //Activity elements
     private TextView receiveText;
     private LineChart hrmChart;
     private TextView hrmMonitor;
+    private Button syncWithMongoBT;
 
     //BTLE
     private String deviceAddress;
@@ -106,10 +95,20 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        loadData();
+        model = new Model();
+        //loadData();
         setHasOptionsMenu(true);
         setRetainInstance(true);
         deviceAddress = getArguments().getString("device");//get arguments from intent bundle
+
+        Realm.init(getContext());
+
+
+
+
+
+
+
         Log.d("TestDebugging", "Llamada onCreate");
     }
 
@@ -124,9 +123,10 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
         receiveText.setMovementMethod(ScrollingMovementMethod.getInstance()); // set text scroll
         hrmMonitor = (TextView) view.findViewById(R.id.hrmdisplay);
         hrmMonitor.setText("0");
+        syncWithMongoBT = view.findViewById(R.id.button2);
         //Test text box
         //testButton = view.findViewById(R.id.elbutton);
-
+        syncWithMongoBT.setOnClickListener(v -> syncMongo(view));
         //testButton.setOnClickListener(v -> showTestData(view));//On click send text to text box
 
         createChard(view);
@@ -190,7 +190,7 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
     @Override
     public void onResume() {
         Log.d("TestDebugging", "Llamada onResume");
-        loadData();//posible errror
+       // loadData();//posible errror
         super.onResume();
         if (initialStart && service != null) {
             initialStart = false;
@@ -216,6 +216,24 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
 
 
     //Save/Load data from Shared preferences
+    public void syncMongo(View v) {
+        Log.d("TimeDebug", "SUBIENDO A MONGO : )");
+        Credentials apiCredential = Credentials.apiKey("IMsL2CGxqW3Ks424o1fxiKuLMZkDPrHlr9actpkZdDuAstBMsMf7RXDb29TjTtR8");
+        Credentials credentials = Credentials.emailPassword("someMail@gmail.com", "somePass");
+        App app = new App(new AppConfiguration.Builder(appId).build());
+        app.loginAsync(apiCredential, new App.Callback<User>() {
+            @Override
+            public void onResult(App.Result<User> result) {
+                User usr = app.currentUser();
+                model.mongoUpMap(usr);
+
+            }
+
+            ;
+
+
+        });
+    }
     public void saveData() {
 
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("shared preferences", MODE_PRIVATE);
@@ -236,7 +254,7 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
         }.getType();
         model.measurements = gson.fromJson(json, type);
         if (model.measurements == null) {
-            model.measurements = new HashMap<String, Measurement>();
+            model.measurements = new TreeMap<String, Measurement>();
         }
 
     }
@@ -507,7 +525,8 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
                     addEntry(algo);//cambiar
                     plotChart = false;
                 }
-                model.measurements.put((out.getTime().toString()), out);
+                model.measurements.put((out.getTime()), out);
+                model.lastInsert = out;
             }
             onBuild = "";
 

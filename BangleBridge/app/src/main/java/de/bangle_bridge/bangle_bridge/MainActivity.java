@@ -3,9 +3,9 @@ package de.bangle_bridge.bangle_bridge;
 import android.os.Bundle;
 import android.view.View;
 
-import androidx.fragment.app.FragmentManager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentManager;
 
 public class MainActivity extends AppCompatActivity implements FragmentManager.OnBackStackChangedListener {
 

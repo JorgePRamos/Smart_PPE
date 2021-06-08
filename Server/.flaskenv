@@ -1,0 +1,2 @@
+FLASK_APP= mongosmartppe
+FLASK_ENV= developmentpip
