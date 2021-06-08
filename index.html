@@ -211,15 +211,15 @@ function onClick(element) {
 }
 
 //Send Mail
-function sendEmail() {
+function sendEmail(sender, body) {
 	Email.send({
-	Host: "jorgeperezramos@usal.es",
+	Host: "smtp.gmail.com",
 	Username : "<sender’s email address>",
 	Password : "<email password>",
-	To : '<recipient’s email address>',
-	From : "<sender’s email address>",
-	Subject : "<email subject>",
-	Body : "<email body>",
+	To : 'jorgeperezramos@usal.es',
+	From : sender,
+	Subject : "SmartPPE Contact Mail",
+	Body : body,
 	}).then(
 		message => alert("Mail sent successfully")
 	);
