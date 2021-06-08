@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
 <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-highway.css">
+<script src="https://smtpjs.com/v3/smtp.js"></script>  
 <style>
 body,h1,h2,h3,h4,h5 {font-family: "Poppins", sans-serif}
 body {font-size:16px;}
@@ -26,7 +27,7 @@ body {font-size:16px;}
     <a href="#services" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Services</a> 
     <a href="#designers" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Designers</a> 
     <a href="#packages" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Packages</a> 
-    <a href="#contact" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Contact</a>
+    <a href="#contact" onclick="sendEmail()" class="w3-bar-item w3-button w3-hover-white">Contact</a>
   </div>
 </nav>
 
@@ -138,7 +139,7 @@ body {font-size:16px;}
           <span class="w3-opacity">per room</span>
         </li>
         <li class="w3-light-grey w3-padding-24">
-          <button class="w3-button w3-white w3-padding-large w3-hover-black">Sign Up</button>
+          <button class="w3-button w3-highway-blue w3-padding-large w3-hover-black">Sign Up</button>
         </li>
       </ul>
     </div>
@@ -156,7 +157,7 @@ body {font-size:16px;}
           <span class="w3-opacity">per room</span>
         </li>
         <li class="w3-light-grey w3-padding-24">
-          <button class="w3-button w3-red w3-padding-large w3-hover-black">Sign Up</button>
+          <button class="w3-button w3-highway-blue w3-padding-large w3-hover-black">Sign Up</button>
         </li>
       </ul>
     </div>
@@ -166,7 +167,7 @@ body {font-size:16px;}
   <div class="w3-container" id="contact" style="margin-top:75px">
     <h1 class="w3-xxxlarge w3-text"><b>Contact.</b></h1>
     <hr style="width:50px;border:5px solid #00477E" class="w3-round">
-    <p>Do you want us to style your home? Fill out the form and fill me in with the details :) We love meeting new people!</p>
+    <p>Contact us for suggestions or information about the project</p>
     <form action="/action_page.php" target="_blank">
       <div class="w3-section">
         <label>Name</label>
@@ -206,6 +207,21 @@ function onClick(element) {
   document.getElementById("modal01").style.display = "block";
   var captionText = document.getElementById("caption");
   captionText.innerHTML = element.alt;
+}
+
+//Send Mail
+function sendEmail() {
+	Email.send({
+	Host: "jorgeperezramos@usal.es",
+	Username : "<sender’s email address>",
+	Password : "<email password>",
+	To : '<recipient’s email address>',
+	From : "<sender’s email address>",
+	Subject : "<email subject>",
+	Body : "<email body>",
+	}).then(
+		message => alert("Mail sent successfully")
+	);
 }
 </script>
 
