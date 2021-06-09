@@ -28,7 +28,7 @@ body {font-size:16px;}
     <a href="#services" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Services</a> 
     <a href="#designers" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Designers</a> 
     <a href="#packages" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Packages</a> 
-    <a href="#contact" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Contact</a>
+   
   </div>
 </nav>
 
@@ -72,52 +72,6 @@ body {font-size:16px;}
     incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
     </p>
   </div>
-  
-  <!-- Designers -->
-  <div class="w3-container" id="designers" style="margin-top:75px">
-    <h1 class="w3-xxxlarge w3-text"><b>Designers.</b></h1>
-    <hr style="width:50px;border:5px solid #00477E" class="w3-round">
-    <p>The best team in the world.</p>
-    <p>We are lorem ipsum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-    dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor
-    incididunt ut labore et quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-    </p>
-    <p><b>Our designers are thoughtfully chosen</b>:</p>
-  </div>
-
-  <!-- The Team -->
-  <div class="w3-row-padding w3-grayscale">
-    <div class="w3-col m4 w3-margin-bottom">
-      <div class="w3-light-grey">
-        <img src="/w3images/team2.jpg" alt="John" style="width:100%">
-        <div class="w3-container">
-          <h3>John Doe</h3>
-          <p class="w3-opacity">CEO & Founder</p>
-          <p>Phasellus eget enim eu lectus faucibus vestibulum. Suspendisse sodales pellentesque elementum.</p>
-        </div>
-      </div>
-    </div>
-    <div class="w3-col m4 w3-margin-bottom">
-      <div class="w3-light-grey">
-        <img src="/w3images/team1.jpg" alt="Jane" style="width:100%">
-        <div class="w3-container">
-          <h3>Jane Doe</h3>
-          <p class="w3-opacity">Designer</p>
-          <p>Phasellus eget enim eu lectus faucibus vestibulum. Suspendisse sodales pellentesque elementum.</p>
-        </div>
-      </div>
-    </div>
-    <div class="w3-col m4 w3-margin-bottom">
-      <div class="w3-light-grey">
-        <img src="/w3images/team3.jpg" alt="Mike" style="width:100%">
-        <div class="w3-container">
-          <h3>Mike Ross</h3>
-          <p class="w3-opacity">Architect</p>
-          <p>Phasellus eget enim eu lectus faucibus vestibulum. Suspendisse sodales pellentesque elementum.</p>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- Packages / Pricing Tables -->
   <div class="w3-container" id="packages" style="margin-top:75px">
@@ -125,7 +79,6 @@ body {font-size:16px;}
     <hr style="width:50px;border:5px solid #00477E" class="w3-round">
     <p>Some text our prices. Lorem ipsum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure</p>
   </div>
-
   <div class="w3-row-padding">
     <div class="w3-half w3-margin-bottom">
       <ul class="w3-ul w3-light-grey w3-center">
@@ -164,6 +117,37 @@ body {font-size:16px;}
     </div>
   </div>
   
+  <!-- Designers -->
+  <div class="w3-container" id="designers" style="margin-top:75px">
+    <h1 class="w3-xxxlarge w3-text"><b>Team.</b></h1>
+    <hr style="width:50px;border:5px solid #00477E" class="w3-round">
+    <p>A development team in development</p>
+    <p>Currently the only member of the team is the founder and only developer Jorge Pérez Ramos, who was tasked with the development of the system as his 
+      thesis and prototype of the TCUE scholarship. The team is being built. 
+    </p>
+    <p><b>Team members</b>:</p>
+  </div>
+
+  <!-- The Team -->
+  <div class="w3-row-padding w3-grayscale">
+    <div class="w3-col m4 w3-margin-bottom">
+      <div class="w3-light-grey">
+        <img src="/res/jprPic.jpg" alt="jorgePIC" style="width:100%">
+        <div class="w3-container">
+          <h3>Jorge Pérez Ramos</h3>
+          <p class="w3-opacity">Founder</p>
+          <p>Author of the system and only developer.</p>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+
+
+
+  
   <!-- Contact -->
   <div class="w3-container" id="contact" style="margin-top:75px">
     <h1 class="w3-xxxlarge w3-text"><b>Contact.</b></h1>
@@ -176,13 +160,13 @@ body {font-size:16px;}
       </div>
       <div class="w3-section">
         <label>Email</label>
-        <input class="w3-input w3-border" type="text" name="Email" required>
+        <input class="w3-input w3-border" type="text" id= "addrMail" name="Email" required>
       </div>
       <div class="w3-section">
         <label>Message</label>
-        <input class="w3-input w3-border" type="text" name="Message" required>
+        <input class="w3-input w3-border" type="text" id= "bodyMail" name="Message" required>
       </div>
-      <button type="submit" class="w3-button w3-block w3-padding-large w3-highway-blue w3-margin-bottom" onclick="sendEmail()">Send Message</button>
+      <button type="button" class="w3-button w3-block w3-padding-large w3-highway-blue w3-margin-bottom" onclick="sendEmail()">Send Message</button>
     </form>  
   </div>
 
@@ -211,18 +195,17 @@ function onClick(element) {
 }
 
 //Send Mail
-function sendEmail(sender, body) {
+function sendEmail() {
+
 	Email.send({
-	Host: "smtp.gmail.com",
-	Username : "<sender’s email address>",
-	Password : "<email password>",
-	To : 'jorgeperezramos@usal.es',
-	From : sender,
-	Subject : "SmartPPE Contact Mail",
-	Body : body,
-	}).then(
-		message => alert("Mail sent successfully")
-	);
+    SecureToken : "f8799b91-ea16-40ff-a776-91a0d93add14",
+    To : 'jorgeperezramos@usal.es',
+    From : document.getElementById("addrMail").value,
+    Subject : "#FormSmartPPE",
+    Body : document.getElementById("bodyMail").value
+}).then(
+  message => alert(message)
+);
 }
 </script>
 
