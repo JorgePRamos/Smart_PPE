@@ -72,10 +72,7 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
     private TextView receiveText;
     private LineChart hrmChart;
     private TextView hrmMonitor;
-    private TextView idWorkerTextField;
     private Button syncWithMongoBT;
-    private Button setWorkerId;
-
 
     //BTLE
     private String deviceAddress;
@@ -125,14 +122,11 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
         //eceiveText.setTextColor(getResources().getColor(R.color.colorRecieveText)); //Color of text
         receiveText.setMovementMethod(ScrollingMovementMethod.getInstance()); // set text scroll
         hrmMonitor = (TextView) view.findViewById(R.id.hrmdisplay);
-        idWorkerTextField = (TextView) view.findViewById(R.id.IdtextView);
         hrmMonitor.setText("0");
-       // syncWithMongoBT = view.findViewById(R.id.button2);
-        setWorkerId = view.findViewById(R.id.submitBtt);
-        setWorkerId.setOnClickListener(v -> pressSubmit(view));
+        syncWithMongoBT = view.findViewById(R.id.button2);
         //Test text box
         //testButton = view.findViewById(R.id.elbutton);
-        //syncWithMongoBT.setOnClickListener(v -> syncMongo());
+        syncWithMongoBT.setOnClickListener(v -> syncMongo(view));
         //testButton.setOnClickListener(v -> showTestData(view));//On click send text to text box
 
         createChard(view);
@@ -222,7 +216,7 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
 
 
     //Save/Load data from Shared preferences
-    public void syncMongo() {
+    public void syncMongo(View v) {
         Log.d("TimeDebug", "SUBIENDO A MONGO : )");
         Credentials apiCredential = Credentials.apiKey("IMsL2CGxqW3Ks424o1fxiKuLMZkDPrHlr9actpkZdDuAstBMsMf7RXDb29TjTtR8");
         Credentials credentials = Credentials.emailPassword("someMail@gmail.com", "somePass");
@@ -427,21 +421,6 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
         }
     }
 
-    public void pressSubmit(View v){
-        idWorkerTextField.setError(null);
-
-        if(model.validateDNI(idWorkerTextField.getText().toString())){
-            model.setWorkerID(idWorkerTextField.getText().toString());
-
-        }else{
-
-            idWorkerTextField.setError("DNI incorrecto");
-
-        }
-
-
-
-    }
     private void send(String str) {
         if (connected != StateOfConnection.True) {//If not conncetted throw textBox alert
 
@@ -481,7 +460,6 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
         int id = item.getItemId();//Get item Id
         if (id == R.id.clear) { //Thrash can option to clear
             receiveText.setText("");
-            syncMongo();
             return true;
         } else if (id == R.id.newline) { //New Line option
             String[] newlineNames = getResources().getStringArray(R.array.newline_names);
@@ -547,10 +525,7 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
                     addEntry(algo);//cambiar
                     plotChart = false;
                 }
-                //add to model
-                String key = model.getWorkerID()+"#"+out.getTime();
-                out.setWorker(model.getWorkerID());
-                model.measurements.put(key, out);
+                model.measurements.put((out.getTime()), out);
                 model.lastInsert = out;
             }
             onBuild = "";
