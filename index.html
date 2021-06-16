@@ -29,7 +29,6 @@ body {font-size:16px;}
     <a href="#packages" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Packages</a> 
     <a href="#designers" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Team</a> 
     <a href="#contact" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Contact</a>
-    <a href="#contact" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white"><a href="graph.html">Application</a>
 
   </div>
 </nav>
@@ -105,7 +104,7 @@ body {font-size:16px;}
 
         </li>
         <li class="w3-light-grey w3-padding-24">
-          <button class="w3-button w3-highway-blue w3-padding-large w3-hover-black">Acess</button>
+          <button class="w3-button w3-highway-blue w3-padding-large w3-hover-black"onclick="goToApp()">Acess</button>
         </li>
       </ul>
     </div>
@@ -165,6 +164,10 @@ function onClick(element) {
   captionText.innerHTML = element.alt;
 }
 
+function goToApp(){
+
+  location.href = "graph.html";
+}
 //Send Mail
 function sendEmail() {
 
