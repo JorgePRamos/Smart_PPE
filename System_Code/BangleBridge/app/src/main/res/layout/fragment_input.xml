@@ -18,53 +18,125 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="731dp"
+                android:layout_height="655dp"
                 android:keepScreenOn="false">
 
                 <TextView
-                    android:id="@+id/receive_text"
-                    android:layout_width="304dp"
-                    android:layout_height="211dp"
-                    android:layout_marginTop="28dp"
+                    android:id="@+id/stepsDisplay"
+                    android:layout_width="88dp"
+                    android:layout_height="76dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="3dp"
+
+                    android:fontFamily="sans-serif-thin"
+                    android:gravity="center"
                     android:text="TextView"
-                    android:visibility="invisible"
+                    android:textAlignment="gravity"
+                    android:textColor="#FFFFFF"
+                    android:textSize="28sp"
+                    app:layout_constraintEnd_toStartOf="@+id/stepIcon"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toEndOf="@+id/heartBottom"
+                    app:layout_constraintTop_toBottomOf="@+id/StepslTag" />
+
+                <ImageView
+                    android:id="@+id/stepIcon"
+                    android:layout_width="68dp"
+                    android:layout_height="57dp"
+                    android:layout_marginTop="84dp"
+                    android:layout_marginEnd="22dp"
+                    android:contentDescription="TODO"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/shoe_print" />
+
+                <TextView
+                    android:id="@+id/StepslTag"
+                    android:layout_width="88dp"
+                    android:layout_height="33dp"
+                    android:layout_marginStart="22dp"
+                    android:layout_marginEnd="70dp"
+                    android:layout_marginBottom="8dp"
+                    android:backgroundTint="@color/design_default_color_background"
+                    android:text="Steps:"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/hrmdisplay"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.985"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:visibility="invisible" />
+                    app:layout_constraintVertical_bias="0.86" />
+
+                <TextView
+                    android:id="@+id/currentHrmlTag"
+                    android:layout_width="88dp"
+                    android:layout_height="33dp"
+                    android:layout_marginStart="22dp"
+                    android:layout_marginEnd="80dp"
+                    android:layout_marginBottom="8dp"
+                    android:backgroundTint="@color/design_default_color_background"
+                    android:text="HRM:"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/hrmdisplay"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.033"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.86" />
 
                 <TextView
                     android:id="@+id/hrmdisplay"
-                    android:layout_width="129dp"
-                    android:layout_height="116dp"
-                    android:layout_marginTop="96dp"
-                    android:layout_marginEnd="50dp"
+                    android:layout_width="88dp"
+                    android:layout_height="76dp"
+                    android:layout_marginStart="22dp"
+                    android:layout_marginTop="84dp"
+                    android:layout_marginEnd="3dp"
                     android:fontFamily="sans-serif-thin"
+                    android:gravity="center"
                     android:text="TextView"
-                    android:textAlignment="textEnd"
+
+                    android:textAlignment="gravity"
                     android:textColor="#FFFFFF"
-                    android:textSize="36sp"
-                    app:layout_constraintEnd_toStartOf="@+id/imageView"
-                    app:layout_constraintHorizontal_bias="1.0"
+                    android:textSize="28sp"
+                    app:layout_constraintEnd_toStartOf="@+id/heartBottom"
+                    app:layout_constraintHorizontal_bias="0.535"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="111dp"
-                    android:layout_height="101dp"
+                    android:id="@+id/heartBottom"
+                    android:layout_width="68dp"
+                    android:layout_height="57dp"
                     android:layout_marginTop="84dp"
-                    android:layout_marginEnd="36dp"
+                    android:layout_marginEnd="184dp"
                     android:contentDescription="TODO"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/heart" />
 
+                <ImageView
+                    android:id="@+id/heartTop"
+                    android:layout_width="69dp"
+                    android:layout_height="57dp"
+                    android:layout_marginTop="84dp"
+                    android:layout_marginEnd="184dp"
+                    android:contentDescription="TODO"
+                    android:scaleX="0.85"
+                    android:scaleY="0.85"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/heart_yellow" />
+
                 <com.github.mikephil.charting.charts.LineChart
                     android:id="@+id/lineChart"
-                    android:layout_width="315dp"
-                    android:layout_height="275dp"
-                    android:layout_marginTop="248dp"
+                    android:layout_width="327dp"
+                    android:layout_height="278dp"
+                    android:layout_marginStart="22dp"
+                    android:layout_marginTop="184dp"
+                    android:layout_marginEnd="22dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
@@ -72,32 +144,34 @@
                 </com.github.mikephil.charting.charts.LineChart>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="389dp"
-                    android:layout_height="148dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="24dp"
+                    android:layout_width="341dp"
+                    android:layout_height="135dp"
+                    android:layout_marginStart="22dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="22dp"
+                    android:layout_marginBottom="16dp"
                     android:background="#FAAC11"
                     android:backgroundTint="#FAAC11"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="1.0">
+                    app:layout_constraintTop_toBottomOf="@+id/lineChart"
+                    app:layout_constraintVertical_bias="0.423">
 
                     <EditText
                         android:id="@+id/IdtextView"
                         android:layout_width="303dp"
                         android:layout_height="39dp"
+
                         android:layout_marginStart="32dp"
                         android:layout_marginEnd="24dp"
 
                         android:background="@drawable/et_style"
                         android:editable="true"
                         android:ems="10"
+                        android:gravity="center"
                         android:inputType="textPersonName"
                         android:text="DNI"
-                        android:gravity="center"
                         android:textAlignment="gravity"
 
                         android:textColor="#000000"
@@ -147,6 +221,15 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    android:id="@+id/receive_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TextView"
+                    android:visibility="invisible"
+                    tools:layout_editor_absoluteX="23dp"
+                    tools:layout_editor_absoluteY="543dp" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

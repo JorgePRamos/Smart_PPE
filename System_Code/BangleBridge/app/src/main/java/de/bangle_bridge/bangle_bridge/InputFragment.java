@@ -42,6 +42,7 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -50,7 +51,10 @@ import org.bson.Document;
 
 import java.lang.reflect.Type;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 import java.util.TreeMap;
 
 import data.Measurement;
@@ -79,6 +83,7 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
     private Button syncWithMongoBT;
     private Button setWorkerId;
 
+    private TextView stepMonitor;
 
     //BTLE
     private String deviceAddress;
@@ -132,10 +137,13 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
         //eceiveText.setTextColor(getResources().getColor(R.color.colorRecieveText)); //Color of text
         receiveText.setMovementMethod(ScrollingMovementMethod.getInstance()); // set text scroll
         hrmMonitor = (TextView) view.findViewById(R.id.hrmdisplay);
+        stepMonitor = (TextView) view.findViewById(R.id.stepsDisplay);
         idWorkerTextField = (TextView) view.findViewById(R.id.IdtextView);
         idWorkerTextField.setText(model.getWorkerID());
         idWorkerTextField.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         hrmMonitor.setText("0");
+        stepMonitor.setText("0");
+
        // syncWithMongoBT = view.findViewById(R.id.button2);
         setWorkerId = view.findViewById(R.id.submitBtt);
         setWorkerId.setOnClickListener(v -> pressSubmit(view));
@@ -290,7 +298,7 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
         hrmChart = (LineChart) v.findViewById(R.id.lineChart);
 
         // enable description text
-        hrmChart.getDescription().setEnabled(true);
+        hrmChart.getDescription().setEnabled(false);
 
         // enable touch gestures
         hrmChart.setTouchEnabled(true);
@@ -333,9 +341,9 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
         leftAxis.setDrawGridLines(true);
 
         YAxis rightAxis = hrmChart.getAxisRight();
-        rightAxis.setEnabled(false);
+        rightAxis.setEnabled(true);
 
-        hrmChart.getAxisLeft().setDrawGridLines(false);
+        hrmChart.getAxisLeft().setDrawGridLines(true);
         hrmChart.getXAxis().setDrawGridLines(false);
         hrmChart.setDrawBorders(false);
 
@@ -566,6 +574,7 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
                 Log.d("hrmdebugg", String.valueOf(out.getHrm()));
                 output.valueOf(out.getHrm());
                 hrmMonitor.setText(String.valueOf(out.getHrm()));
+                stepMonitor.setText(String.valueOf(out.getSteps()));
                 if (plotChart) {
                     float algo = (float) out.getHrm();
                     addEntry(algo);//cambiar

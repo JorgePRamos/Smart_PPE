@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#00365C</color>
-    <color name="colorPrimaryDark">#035893</color>
-    <color name="colorAccent">#026BB5</color>
+    <color name="colorPrimaryDark">#003153</color>
+    <color name="colorAccent">#003860</color>
 
-    <color name="colorRecieveText">#00FF00</color>
+    <color name="colorrBecieveText">#00FF00</color>
     <color name="colorSendText">#82CAFF</color>
     <color name="colorStatusText">#FFDB58</color>
+    <color name="colorBacKground">#2B80FF</color>
+    <color name="colorBar">#FAAC11</color>
 </resources>
