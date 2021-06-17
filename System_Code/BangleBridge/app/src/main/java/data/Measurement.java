@@ -15,6 +15,7 @@ import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 class TimeKey implements Serializable{
+
     private float hrs;
     private float min;
     private float sec;
@@ -109,7 +110,7 @@ class TimeKey implements Serializable{
 }
 
 public class Measurement implements Serializable {
-
+    public final String GUESTID = "11122333G";
     private double hrm;
     public Measurement() {
         this.hrm = 0;
@@ -119,6 +120,7 @@ public class Measurement implements Serializable {
         this.com = null;
         this.gps = null;
         this.time = "";
+        this.worker = this.GUESTID;
     }
     public Measurement(double hrm, Integer steps, Integer btt, Accelerometer acc, Compass com, Gps gps, String time) {
         this.hrm = hrm;
@@ -136,7 +138,15 @@ public class Measurement implements Serializable {
     Compass com = new Compass();
     Gps gps = new Gps();
 
+    public String getWorker() {
+        return worker;
+    }
 
+    public void setWorker(String worker) {
+        this.worker = worker;
+    }
+
+    private String worker;
     private String time;
 
     public double getHrm() {

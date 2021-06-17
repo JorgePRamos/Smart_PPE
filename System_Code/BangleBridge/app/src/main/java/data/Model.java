@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.regex.Pattern;
 
 import io.realm.Realm;
 import io.realm.mongodb.RealmResultTask;
@@ -31,6 +32,9 @@ import static com.mongodb.client.model.Indexes.descending;
 import static java.lang.Thread.sleep;
 
 public class Model implements Serializable {
+   public final String GUESTID = "11122333G";
+
+    private String workerID = "11122333G"; //guest ID
     public TreeMap<String,Measurement> measurements = null;
     public Map<String,Measurement> sortenMap  = new TreeMap<String,Measurement>();;
     public Measurement lastInsert = null;
@@ -38,14 +42,50 @@ public class Model implements Serializable {
     private User usr;
     public Model() {
         measurements = new TreeMap<String,Measurement>();
+        this.workerID = GUESTID;
+    }
+    public String getWorkerID() {
+        return workerID;
+    }
+
+    public void setWorkerID(String workerID) {
+        this.workerID = workerID;
+    }
+    public boolean validateDNI(String dni){
+
+        boolean regex= Pattern.compile("^[0-9]{8,8}[A-Za-z]$").matcher(dni).matches();
+        boolean letter = validarLetra(dni);
+
+
+        return regex && letter;
+
+    }
+    public static  boolean validarLetra(String dni){
+        String[] asignacionLetra = {"T", "R", "W", "A", "G", "M", "Y", "F", "P", "D", "X", "B", "N", "J", "Z", "S", "Q", "V", "H", "L", "C", "K", "E"};
+
+        Integer num = 0;
+        String subCadena = dni.substring(0,(dni.length() -1 ));
+        try{
+             num = Integer.parseInt(subCadena);
+
+        }catch( java.lang.NumberFormatException ex){
+
+            return false;
+        }
+
+        int resto = num % 23;
+        System.out.println(dni.substring(dni.length()-1,dni.length()));
+        if(asignacionLetra[resto].equalsIgnoreCase(dni.substring(dni.length()-1,dni.length()))){
+
+            return true;
+        }
+        return false;
 
     }
 
-
-
     public void mongoUpMap(User usr){
 
-        Log.d("MONGO","MOngo upMap");
+        Log.d("MONGO","Mongo upMap");
         MongoClient mongoClient = usr.getMongoClient("mongodb-atlas");
         MongoDatabase mongoDatabase =
                 mongoClient.getDatabase("MeasurementsDB");
@@ -115,7 +155,7 @@ public class Model implements Serializable {
                 String json =  new Gson().toJson(kv.getValue());
                 Object o = BasicDBObject.parse(json);
                 DBObject dbObj = (DBObject) o;
-
+                doc.put("_time", kv.getValue().getTime());
                 doc.put("query", dbObj);
 
                 Log.d("MONGO", "****> "+doc.toString());
