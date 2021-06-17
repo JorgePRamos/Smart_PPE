@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:backgroundTint="#FAAC11"
     android:orientation="vertical">
 
     <ScrollView
@@ -17,23 +18,8 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="731dp"
                 android:keepScreenOn="false">
-
-                <EditText
-                    android:id="@+id/IdtextView"
-                    android:layout_width="208dp"
-                    android:layout_height="42dp"
-                    android:layout_marginTop="580dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="32dp"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    android:text="DNI"
-                    android:textColor="#FF0101"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/receive_text"
@@ -74,21 +60,6 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/heart" />
 
-                <Button
-
-                    android:id="@+id/submitBtt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="44dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="32dp"
-                    android:text="Submit"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/IdtextView"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="1.0" />
-
                 <com.github.mikephil.charting.charts.LineChart
                     android:id="@+id/lineChart"
                     android:layout_width="315dp"
@@ -99,6 +70,83 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                 </com.github.mikephil.charting.charts.LineChart>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="389dp"
+                    android:layout_height="148dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="24dp"
+                    android:background="#FAAC11"
+                    android:backgroundTint="#FAAC11"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="1.0">
+
+                    <EditText
+                        android:id="@+id/IdtextView"
+                        android:layout_width="303dp"
+                        android:layout_height="39dp"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginEnd="24dp"
+
+                        android:background="@drawable/et_style"
+                        android:editable="true"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        android:text="DNI"
+                        android:gravity="center"
+                        android:textAlignment="gravity"
+
+                        android:textColor="#000000"
+                        android:textDirection="locale"
+                        android:textIsSelectable="false"
+                        android:textSize="16sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.76"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.733" />
+
+                    <Button
+
+                        android:id="@+id/submitBtt"
+                        android:layout_width="84dp"
+                        android:layout_height="33dp"
+                        android:layout_marginTop="32dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_marginBottom="21dp"
+                        android:background="@drawable/et_style"
+                        android:text="Submit"
+                        android:textColor="#000000"
+                        app:layout_constraintBottom_toTopOf="@+id/IdtextView"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.96"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="1.0" />
+
+                    <TextView
+                        android:id="@+id/Id_UsuarioLabel"
+                        android:layout_width="123dp"
+                        android:layout_height="26dp"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginTop="32dp"
+                        android:layout_marginBottom="32dp"
+                        android:text="Id_Usuario:"
+                        android:textColor="#FFFFFF"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toTopOf="@+id/IdtextView"
+                        app:layout_constraintEnd_toStartOf="@+id/submitBtt"
+                        app:layout_constraintHorizontal_bias="0.233"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

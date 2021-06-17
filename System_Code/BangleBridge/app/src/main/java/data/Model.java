@@ -1,6 +1,8 @@
 package data;
 
 
+import android.provider.Settings;
+import android.provider.Settings.Secure;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -32,7 +34,9 @@ import static com.mongodb.client.model.Indexes.descending;
 import static java.lang.Thread.sleep;
 
 public class Model implements Serializable {
-   public final String GUESTID = "11122333G";
+
+
+
 
     private String workerID = "11122333G"; //guest ID
     public TreeMap<String,Measurement> measurements = null;
@@ -40,9 +44,9 @@ public class Model implements Serializable {
     public Measurement lastInsert = null;
     private String lastUpload = "2021-04-29T00:00:00.000Z";
     private User usr;
-    public Model() {
+    public Model(String workerID) {
         measurements = new TreeMap<String,Measurement>();
-        this.workerID = GUESTID;
+        this.workerID = workerID;
     }
     public String getWorkerID() {
         return workerID;

@@ -10,9 +10,11 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -63,6 +65,7 @@ import io.realm.mongodb.mongo.MongoCollection;
 import io.realm.mongodb.mongo.MongoDatabase;
 
 import static android.content.Context.MODE_PRIVATE;
+import static java.lang.Thread.sleep;
 
 public class InputFragment extends Fragment implements ServiceConnection, SerialListener {
     public Model model = null;
@@ -86,7 +89,7 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
 
     private StateOfConnection connected = StateOfConnection.False;
     private String newline = TextUtil.newline_crlf;
-
+    Drawable myIcon;
     //State Booleans
     private boolean plotChart = true;
     private boolean initialStart = true;
@@ -98,12 +101,14 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        model = new Model();
-        //loadData();
+        String android_id = Settings.Secure.getString(getContext().getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+        model = new Model("G-"+android_id);
+        model =loadData();
         setHasOptionsMenu(true);
         setRetainInstance(true);
         deviceAddress = getArguments().getString("device");//get arguments from intent bundle
-
+        Log.d("WorkerIdLog", " OnCreate---> "+model.getWorkerID());
         Realm.init(getContext());
 
 
@@ -120,12 +125,16 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
         //Terminal fragment
         View view = inflater.inflate(R.layout.fragment_input, container, false);//Get XML of terminal
         //Recieved text box
+        myIcon = getResources().getDrawable(R.drawable.outline_check_circle_24);
+        myIcon.setBounds(0, 0, myIcon.getIntrinsicWidth(), myIcon.getIntrinsicHeight());
 
         receiveText = view.findViewById(R.id.receive_text); // Text box for recived text
         //eceiveText.setTextColor(getResources().getColor(R.color.colorRecieveText)); //Color of text
         receiveText.setMovementMethod(ScrollingMovementMethod.getInstance()); // set text scroll
         hrmMonitor = (TextView) view.findViewById(R.id.hrmdisplay);
         idWorkerTextField = (TextView) view.findViewById(R.id.IdtextView);
+        idWorkerTextField.setText(model.getWorkerID());
+        idWorkerTextField.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         hrmMonitor.setText("0");
        // syncWithMongoBT = view.findViewById(R.id.button2);
         setWorkerId = view.findViewById(R.id.submitBtt);
@@ -136,7 +145,7 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
         //testButton.setOnClickListener(v -> showTestData(view));//On click send text to text box
 
         createChard(view);
-
+        Log.d("WorkerIdLog", "---> "+model.getWorkerID());
 
         return view;
     }
@@ -246,22 +255,32 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Gson gson = new Gson();
         String json = gson.toJson(model.measurements);
+        String idworker = gson.toJson(model.getWorkerID());
         editor.putString("messurementsList", json);
+        editor.putString("workerId", idworker);
         editor.apply();
 
     }
 
-    public void loadData() {
+    public Model loadData() {
 
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("shared preferences", MODE_PRIVATE);
         Gson gson = new Gson();
         String json = sharedPreferences.getString("messurementsList", null);
-        Type type = new TypeToken<HashMap<String, Measurement>>() {
+        String workerId = sharedPreferences.getString("workerId", null);
+        Type type = new TypeToken<TreeMap<String, Measurement>>() {
+        }.getType();
+        Type typeId = new TypeToken<String>() {
         }.getType();
         model.measurements = gson.fromJson(json, type);
+        model.setWorkerID(gson.fromJson(workerId, typeId));
         if (model.measurements == null) {
             model.measurements = new TreeMap<String, Measurement>();
         }
+        String android_id = Settings.Secure.getString(getContext().getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+        if(model.getWorkerID() == null) model.setWorkerID("G-"+android_id);
+        return model;
 
     }
 
@@ -382,7 +401,7 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
                 while (true) {
                     plotChart = true;
                     try {
-                        Thread.sleep(10);
+                        sleep(10);
                     } catch (InterruptedException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
@@ -432,6 +451,10 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
 
         if(model.validateDNI(idWorkerTextField.getText().toString())){
             model.setWorkerID(idWorkerTextField.getText().toString());
+            idWorkerTextField.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            idWorkerTextField.setError("Correcto", myIcon);
+
+
 
         }else{
 
@@ -530,6 +553,7 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void jsonWatcher(String in) {
+
         Log.d("SavingJson", "Nº --> " + model.measurements.size());
         Log.d("JsonNull", "IN --> " + in);
         if (in.contains("#")) {
@@ -551,6 +575,7 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
                 String key = model.getWorkerID()+"#"+out.getTime();
                 out.setWorker(model.getWorkerID());
                 model.measurements.put(key, out);
+                idWorkerTextField.setError(null);
                 model.lastInsert = out;
             }
             onBuild = "";
