@@ -581,9 +581,13 @@ public class InputFragment extends Fragment implements ServiceConnection, Serial
                     plotChart = false;
                 }
                 //add to model
-                String key = model.getWorkerID()+"#"+out.getTime();
+                String keyW = model.getWorkerID()+"#"+out.getTime();
                 out.setWorker(model.getWorkerID());
-                model.measurements.put(key, out);
+                Log.d("TimeDebug", "---> "+keyW);
+                out.setWorker(keyW);
+                model.measurements.put(out.getTime(), out);
+                Log.d("TimeDebug", "MODEL------>"+model.measurements.firstEntry().getValue().getTime());
+                Log.d("TimeDebug", "MODEL KEY------>"+model.measurements.firstEntry().getKey());
                 idWorkerTextField.setError(null);
                 model.lastInsert = out;
             }

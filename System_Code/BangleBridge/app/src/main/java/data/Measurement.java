@@ -22,6 +22,8 @@ class TimeKey implements Serializable{
     private int day;
     private int month;
     private int year;
+    //Tags Accidentes
+
 
     public TimeKey(float hrs, float min, float sec, int day, int month, int year) {
         this.hrs = hrs;
@@ -112,6 +114,33 @@ class TimeKey implements Serializable{
 public class Measurement implements Serializable {
     public final String GUESTID = "11122333G";
     private double hrm;
+    private Boolean caida = false;
+    private Boolean infarto = false;
+    private  Boolean tropiezo = false;
+
+    public Boolean getCaida() {
+        return caida;
+    }
+
+    public void setCaida(Boolean caida) {
+        this.caida = caida;
+    }
+
+    public Boolean getInfarto() {
+        return infarto;
+    }
+
+    public void setInfarto(Boolean infarto) {
+        this.infarto = infarto;
+    }
+
+    public Boolean getTropiezo() {
+        return tropiezo;
+    }
+
+    public void setTropiezo(Boolean tropiezo) {
+        this.tropiezo = tropiezo;
+    }
     public Measurement() {
         this.hrm = 0;
         this.steps = 0;
@@ -121,6 +150,7 @@ public class Measurement implements Serializable {
         this.gps = null;
         this.time = "";
         this.worker = this.GUESTID;
+
     }
     public Measurement(double hrm, Integer steps, Integer btt, Accelerometer acc, Compass com, Gps gps, String time) {
         this.hrm = hrm;

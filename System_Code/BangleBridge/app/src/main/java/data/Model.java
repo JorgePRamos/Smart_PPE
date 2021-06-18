@@ -155,11 +155,13 @@ public class Model implements Serializable {
             for(HashMap.Entry<String, Measurement> kv :sortenMap.entrySet()) {//change to cropped
                 Document doc = new Document();
 
-                doc.put("_id", kv.getKey());
+                doc.put("_id", kv.getValue().getWorker());
                 String json =  new Gson().toJson(kv.getValue());
                 Object o = BasicDBObject.parse(json);
                 DBObject dbObj = (DBObject) o;
                 doc.put("_time", kv.getValue().getTime());
+                Log.d("TimeDebug", "################"+kv.getValue().getTime());
+                Log.d("TimeDebug", "================"+kv.getValue().getWorker());
                 doc.put("query", dbObj);
 
                 Log.d("MONGO", "****> "+doc.toString());
