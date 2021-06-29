@@ -5,16 +5,17 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
-import org.bson.Document;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+/** Represents a moment in time where a measurement was taken. Added for device retrocompatibility.
+ * @author Jorge
+ * @version 1.5
+ * @since 1.0
+ */
+class TimeKey implements Serializable {
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
-
-class TimeKey implements Serializable{
 
     private float hrs;
     private float min;
@@ -110,13 +111,17 @@ class TimeKey implements Serializable{
         return hrs + "/" + min + "/" + sec + "/" + day + "/" + month + "/" + year;
     }
 }
-
+/**  Represents an instance of all the biometrics taken by the wearable in a given moment.
+ * @author Jorge
+ * @version 1.5
+ * @since 1.0
+ */
 public class Measurement implements Serializable {
     public final String GUESTID = "11122333G";
     private double hrm;
     private Boolean caida = false;
     private Boolean infarto = false;
-    private  Boolean tropiezo = false;
+    private Boolean tropiezo = false;
 
     public Boolean getCaida() {
         return caida;
@@ -141,6 +146,7 @@ public class Measurement implements Serializable {
     public void setTropiezo(Boolean tropiezo) {
         this.tropiezo = tropiezo;
     }
+
     public Measurement() {
         this.hrm = 0;
         this.steps = 0;
@@ -152,6 +158,7 @@ public class Measurement implements Serializable {
         this.worker = this.GUESTID;
 
     }
+
     public Measurement(double hrm, Integer steps, Integer btt, Accelerometer acc, Compass com, Gps gps, String time) {
         this.hrm = hrm;
         this.steps = steps;
@@ -355,13 +362,13 @@ public class Measurement implements Serializable {
 
             String splited[] = og.substring(0, og.indexOf(".")).split("T");
             Log.d("TimeDebug", og);
-            if(splited.length == 2) {
+            if (splited.length == 2) {
                 String[] date = splited[0].split("-");
                 String[] time = splited[1].split(":");
                 //float hrs, float min, float sec, int day, int month, int year
                 TimeKey tk = new TimeKey(Float.parseFloat(time[0]), Float.parseFloat(time[1]), Float.parseFloat(time[2]), Integer.parseInt(date[2]), Integer.parseInt(date[1]), Integer.parseInt(date[0]));
                 nm = new Measurement(mess.getDouble("hrm"), mess.getInt("step"), mess.getInt("batt"), accTemp, comTemp, gpstemp, og);
-            }else{
+            } else {
                 TimeKey tk = new TimeKey();
                 nm = new Measurement(mess.getDouble("hrm"), mess.getInt("step"), mess.getInt("batt"), accTemp, comTemp, gpstemp, og);
             }

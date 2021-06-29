@@ -1,12 +1,16 @@
 package de.bangle_bridge.bangle_bridge;
 
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
-
+/**
+ * Main class called when the Main Activity is opened at the application launch. Supports the rest of the functionalities via fragment loading.
+ * @author Jorge
+ * @version 1.5
+ * @since 1.0
+ */
 public class MainActivity extends AppCompatActivity implements FragmentManager.OnBackStackChangedListener {
 
     @Override
@@ -19,7 +23,7 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
         setSupportActionBar(toolbar);//Set tool bar as activity app bar
         getSupportFragmentManager().addOnBackStackChangedListener(this);
         if (savedInstanceState == null)//Check if first boot
-            getSupportFragmentManager().beginTransaction().add(R.id.fragment, new DevicesFragment(), "devices").commit();//Call devicesfragment Constructor
+            getSupportFragmentManager().beginTransaction().add(R.id.fragment, new ConnectionFragment(), "devices").commit();//Call devicesfragment Constructor
         else
             onBackStackChanged();
     }

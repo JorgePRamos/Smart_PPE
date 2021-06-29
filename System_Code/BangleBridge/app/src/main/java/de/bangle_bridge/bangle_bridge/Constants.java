@@ -1,5 +1,10 @@
 package de.bangle_bridge.bangle_bridge;
-
+/**
+ * Constant definition for clearer code.
+ * * @author Jorge
+ * @version 1.5
+ * @since 1.0
+ */
 class Constants {
 
     // values have to be globally unique

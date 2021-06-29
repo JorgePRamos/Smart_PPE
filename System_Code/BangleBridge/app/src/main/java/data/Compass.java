@@ -1,5 +1,9 @@
 package data;
-
+/** Represents a compass entry.
+ * @author Jorge
+ * @version 1.5
+ * @since 1.0
+ */
 public class Compass {
 
     // mag = {x,y,z,dx,dy,dz,heading}
@@ -20,6 +24,7 @@ public class Compass {
         this.dz = dz;
         this.heading = heading;
     }
+
     public Compass() {
         this.x = 0.0;
         this.y = 0.0;

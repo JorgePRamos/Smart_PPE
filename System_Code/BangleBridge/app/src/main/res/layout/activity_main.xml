@@ -27,7 +27,7 @@
         android:alpha="0.70"
         android:background="@drawable/banglebridgelogo_amarillo"
         android:scaleX="0.65"
-        android:scaleY="0.45">
+        android:scaleY="0.35">
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

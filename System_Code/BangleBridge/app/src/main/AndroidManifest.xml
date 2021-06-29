@@ -27,7 +27,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".SerialService" />
+        <service android:name=".BtService" />
     </application>
 
 </manifest>

@@ -1,5 +1,9 @@
 package data;
-
+/**  Represents a Gps entry.
+ * @author Jorge
+ * @version 1.5
+ * @since 1.0
+ */
 public class Gps {
     // gps = {lat,lon,alt,speed,etc}
     private Double lat;

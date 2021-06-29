@@ -1,6 +1,5 @@
 package de.bangle_bridge.bangle_bridge;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -14,8 +13,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import data.Model;
 
-public class BangleDataView extends AppCompatActivity implements SerialListener{
+/**
+ * elij
+ *
+ * @author Jorge
+ * @version 1.5
+ * @since 1.0
+ */
+public class BangleDataView extends AppCompatActivity implements BtListener {
     Model model = null;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,19 +32,19 @@ public class BangleDataView extends AppCompatActivity implements SerialListener{
     }
 
     private String deviceAddress;
-    private SerialService service;
+    private BtService service;
 
     private TextView receiveText;
     private boolean pendingNewline = false;
-    private String newline = TextUtil.newline_crlf;
+    private String newline = TxtUtil.newline_crlf;
 
 
     private void receive(byte[] data) {//recievoing messages from device
 
         String msg = new String(data);//Get recieved adata from arguments to strin g
-        if(newline.equals(TextUtil.newline_crlf) && msg.length() > 0) {//Look fro end of the line
+        if (newline.equals(TxtUtil.newline_crlf) && msg.length() > 0) {//Look fro end of the line
             //retorno de linea CR
-            msg = msg.replace(TextUtil.newline_crlf, TextUtil.newline_lf);
+            msg = msg.replace(TxtUtil.newline_crlf, TxtUtil.newline_lf);
             // CR + LF
             if (pendingNewline && msg.charAt(0) == '\n') {
                 Editable edt = receiveText.getEditableText();
@@ -46,7 +53,7 @@ public class BangleDataView extends AppCompatActivity implements SerialListener{
             }
             pendingNewline = msg.charAt(msg.length() - 1) == '\r';
         }
-        receiveText.append(TextUtil.toCaretString(msg, newline.length() != 0));
+        receiveText.append(TxtUtil.toCaretString(msg, newline.length() != 0));
 
     }
 
@@ -57,7 +64,7 @@ public class BangleDataView extends AppCompatActivity implements SerialListener{
 
 
     private void status(String str) {//Print Spawneable String on textBox
-        SpannableStringBuilder spn = new SpannableStringBuilder(str+'\n');
+        SpannableStringBuilder spn = new SpannableStringBuilder(str + '\n');
         spn.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorStatusText)), 0, spn.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         receiveText.append(spn);
     }
@@ -71,7 +78,7 @@ public class BangleDataView extends AppCompatActivity implements SerialListener{
     }
 
 
-    // SerialListener Implemntation
+    // BtListener Implemntation
     @Override
     public void onSerialConnect() {
         status("connected");

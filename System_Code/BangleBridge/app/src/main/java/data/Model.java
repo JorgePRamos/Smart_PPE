@@ -1,17 +1,13 @@
 package data;
 
 
-import android.provider.Settings;
-import android.provider.Settings.Secure;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import com.mongodb.client.model.Sorts;
 
 import org.bson.Document;
-import org.bson.conversions.Bson;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -21,33 +17,31 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
-import io.realm.Realm;
-import io.realm.mongodb.RealmResultTask;
 import io.realm.mongodb.User;
 import io.realm.mongodb.mongo.MongoClient;
 import io.realm.mongodb.mongo.MongoCollection;
 import io.realm.mongodb.mongo.MongoDatabase;
-import io.realm.mongodb.mongo.iterable.FindIterable;
-import io.realm.mongodb.mongo.iterable.MongoCursor;
-
-import static com.mongodb.client.model.Indexes.descending;
-import static java.lang.Thread.sleep;
-
+/**  Model class reposnible of the storage of Measurements and synchronization of these to the server.
+ * @author Jorge
+ * @version 1.5
+ * @since 1.0
+ */
 public class Model implements Serializable {
 
 
-
-
     private String workerID = "11122333G"; //guest ID
-    public TreeMap<String,Measurement> measurements = null;
-    public Map<String,Measurement> sortenMap  = new TreeMap<String,Measurement>();;
+    public TreeMap<String, Measurement> measurements = null;
+    public Map<String, Measurement> sortenMap = new TreeMap<String, Measurement>();
+    ;
     public Measurement lastInsert = null;
     private String lastUpload = "2021-04-29T00:00:00.000Z";
     private User usr;
+
     public Model(String workerID) {
-        measurements = new TreeMap<String,Measurement>();
+        measurements = new TreeMap<String, Measurement>();
         this.workerID = workerID;
     }
+
     public String getWorkerID() {
         return workerID;
     }
@@ -55,31 +49,33 @@ public class Model implements Serializable {
     public void setWorkerID(String workerID) {
         this.workerID = workerID;
     }
-    public boolean validateDNI(String dni){
 
-        boolean regex= Pattern.compile("^[0-9]{8,8}[A-Za-z]$").matcher(dni).matches();
+    public boolean validateDNI(String dni) {
+
+        boolean regex = Pattern.compile("^[0-9]{8,8}[A-Za-z]$").matcher(dni).matches();
         boolean letter = validarLetra(dni);
 
 
         return regex && letter;
 
     }
-    public static  boolean validarLetra(String dni){
+
+    public static boolean validarLetra(String dni) {
         String[] asignacionLetra = {"T", "R", "W", "A", "G", "M", "Y", "F", "P", "D", "X", "B", "N", "J", "Z", "S", "Q", "V", "H", "L", "C", "K", "E"};
 
         Integer num = 0;
-        String subCadena = dni.substring(0,(dni.length() -1 ));
-        try{
-             num = Integer.parseInt(subCadena);
+        String subCadena = dni.substring(0, (dni.length() - 1));
+        try {
+            num = Integer.parseInt(subCadena);
 
-        }catch( java.lang.NumberFormatException ex){
+        } catch (java.lang.NumberFormatException ex) {
 
             return false;
         }
 
         int resto = num % 23;
-        System.out.println(dni.substring(dni.length()-1,dni.length()));
-        if(asignacionLetra[resto].equalsIgnoreCase(dni.substring(dni.length()-1,dni.length()))){
+        System.out.println(dni.substring(dni.length() - 1, dni.length()));
+        if (asignacionLetra[resto].equalsIgnoreCase(dni.substring(dni.length() - 1, dni.length()))) {
 
             return true;
         }
@@ -87,9 +83,9 @@ public class Model implements Serializable {
 
     }
 
-    public void mongoUpMap(User usr){
+    public void mongoUpMap(User usr) {
 
-        Log.d("MONGO","Mongo upMap");
+        Log.d("MONGO", "Mongo upMap");
         MongoClient mongoClient = usr.getMongoClient("mongodb-atlas");
         MongoDatabase mongoDatabase =
                 mongoClient.getDatabase("MeasurementsDB");
@@ -100,48 +96,46 @@ public class Model implements Serializable {
 
         //RealmResultTask<Document> yoyo =  mess.find().first();
         //RealmResultTask<Document> yoyo =
-     //  Measurement mTemp = new Measurement();
+        //  Measurement mTemp = new Measurement();
         //FindIterable<Document> ressult= mess.find().limit(1).sort(new BasicDBObject("_id",-1));
-
 
 
         //****
 
-       //String a= mess.find().limit(1).sort(new BasicDBObject("_id",-1)).first();
+        //String a= mess.find().limit(1).sort(new BasicDBObject("_id",-1)).first();
 
 
         BasicDBObject getQuery = new BasicDBObject();
         //        getQuery.put("employeeId", new BasicDBObject("$gt", 2).append("$lt", 5));
 
-        Log.d("MONGO","LASTUPLOAD--->"+ lastUpload);
-        getQuery.put("_id", new BasicDBObject("$eq", lastUpload));
-
+        Log.d("MONGO", "LASTUPLOAD--->" + lastUpload);
+        getQuery.put("_time", new BasicDBObject("$eq", lastUpload));
 
 
         //****
         mess.findOne(getQuery).getAsync(task -> {
             if (task.isSuccess()) {
                 Document result = task.get();
-                if (result != null){
-                    for (HashMap.Entry<String, Measurement> m:measurements.entrySet()) {
-                        Log.d("MONGO", "Mess---> "+ m.getKey()+"\n");
+                if (result != null) {// Si la mess fue encontrada
+                    for (HashMap.Entry<String, Measurement> m : measurements.entrySet()) {//Monstramos todas
+                        Log.d("MONGO", "Mess---> " + m.getKey() + "\n");
                     }
                     sortenMap = measurements.tailMap(lastUpload);
                     sortenMap.remove(lastUpload);
-                    Log.v("MONGO", "-->successfully found a document: " + result+"\n Numeber in sorterd-->"+sortenMap.size());
-                    for (HashMap.Entry<String, Measurement> m:sortenMap.entrySet()) {
-                        Log.d("MONGO", "shorted map #### "+ m.getKey()+"\n");
+                    Log.v("MONGO", "-->successfully found a document: " + result + "\n Numeber in sorterd-->" + sortenMap.size());
+                    for (HashMap.Entry<String, Measurement> m : sortenMap.entrySet()) {
+                        Log.d("MONGO", "shorted map #### " + m.getKey() + "\n");
                     }
 
-                }else {
-                    for (HashMap.Entry<String, Measurement> m:measurements.entrySet()) {
-                        Log.d("MONGO", "Mess---> "+ m.getKey()+"\n");
+                } else {
+                    for (HashMap.Entry<String, Measurement> m : measurements.entrySet()) {
+                        Log.d("MONGO", "Mess---> " + m.getKey() + "\n");
                     }
 
                     sortenMap = measurements;
-                    Log.d("MONGO", "## Result null: "+result +"\nNumeber in Meassuremap-->"+measurements.size());
-                    for (HashMap.Entry<String, Measurement> m:sortenMap.entrySet()) {
-                        Log.d("MONGO", "shorted map #### "+ m.getKey()+"\n");
+                    Log.d("MONGO", "## Result null: " + result + "\nNumeber in Meassuremap-->" + measurements.size());
+                    for (HashMap.Entry<String, Measurement> m : sortenMap.entrySet()) {
+                        Log.d("MONGO", "shorted map #### " + m.getKey() + "\n");
                     }
                 }
 
@@ -149,22 +143,23 @@ public class Model implements Serializable {
                 Log.e("MONGO", "failed to find document with: ", task.getError());
             }
 
-            HashMap<String,Measurement> cropedmeasurements = null;
+            HashMap<String, Measurement> cropedmeasurements = null;
 
             List<Document> documents = new ArrayList<>();
-            for(HashMap.Entry<String, Measurement> kv :sortenMap.entrySet()) {//change to cropped
+            for (HashMap.Entry<String, Measurement> kv : sortenMap.entrySet()) {//change to cropped
                 Document doc = new Document();
 
                 doc.put("_id", kv.getValue().getWorker());
-                String json =  new Gson().toJson(kv.getValue());
+                String json = new Gson().toJson(kv.getValue());
                 Object o = BasicDBObject.parse(json);
                 DBObject dbObj = (DBObject) o;
                 doc.put("_time", kv.getValue().getTime());
-                Log.d("TimeDebug", "################"+kv.getValue().getTime());
-                Log.d("TimeDebug", "================"+kv.getValue().getWorker());
+
+                doc.put("_workerId", this.workerID);
+
                 doc.put("query", dbObj);
 
-                Log.d("MONGO", "****> "+doc.toString());
+                Log.d("MONGO", "****> " + doc.toString());
 
                 lastUpload = kv.getKey();
                 documents.add(doc);
@@ -179,10 +174,6 @@ public class Model implements Serializable {
                 }
             });
         });
-
-
-
-
 
 
     }
@@ -208,7 +199,7 @@ public class Model implements Serializable {
         }
 
     }*/
-    }
+}
 
 
 
