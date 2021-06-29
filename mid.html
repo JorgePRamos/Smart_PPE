@@ -69,7 +69,7 @@
 
     <!-- Header -->
     <div class="w3-container" style="margin-top:80px" id="showcase">
-      <h1 class="w3-jumbo"><b>Data Representation</b></h1>
+      <h1 class="w3-jumbo"><b>Data Analysis Representation</b></h1>
 
     </div>
 
@@ -83,20 +83,42 @@
         <p id="caption"></p>
       </div>
     </div>
+</div>
 
-    <div class="container">
-      <iframe class ="responsive-iframe" 
-        src="https://app.deepint.net/shared/000001790ededf4c-027cb81f-a5e9b7d9-c52db13e/views/00000179f20ba084-25a4c5cb-69c21a3a-c8299a30">
-      </iframe>
-    </div>
+<!-- Access / Tables -->
+
+</div>
+<div class="w3-row-padding">
+ <div class="w3-half w3-margin-bottom">
+   <ul class="w3-ul w3-light-grey w3-center">
+     <li class="w3-dark-grey w3-xlarge w3-padding-32">Plain data representation</li>
+     <img src="res/manResear.png" alt="plain data representation icon"  width="155" />
+
+     <li class="w3-padding-16">Graphical representation of the system dataset</li>
 
 
+     <li class="w3-light-grey w3-padding-24">
+        <button class="w3-button w3-highway-blue w3-padding-large w3-hover-black"onclick="goToGraph()">Acess</button>
 
-    <iframe id="inlineFrameExample" title="Sector graph" width="1500" height="500"
-      src="https://app.deepint.net/shared/000001790ededf4c-027cb81f-a5e9b7d9-c52db13e/views/00000179f211d6b6-0d7b991f-19f8f0c6-19d8db35v">
-    </iframe>
+     </li>
+   </ul>
+ </div>
+
+ <div class="w3-half">
+   <ul class="w3-ul w3-light-grey w3-center">
+     <li class="w3-highway-blue w3-xlarge w3-padding-32">AI Projection representation</li>
+     <img src="res/ai_icon.png" alt="projection representation icon"  width="155" />
+
+     <li class="w3-padding-16">Representation of projections from system dataset</li>
 
 
+     </li>
+     <li class="w3-light-grey w3-padding-24">
+        <button class="w3-button w3-highway-blue w3-padding-large w3-hover-black"onclick="goToProje()">Acess</button>
+     </li>
+   </ul>
+ </div>
+</div>
 
     <!-- Contact -->
     <div class="w3-container" id="contact" style="margin-top:75px">
@@ -158,6 +180,14 @@
         message => alert(message)
       );
     }
+    function goToGraph(){
+
+        location.href = "graph.html";
+    }
+    function goToProje(){
+
+        location.href = "prject.html";
+    }   
   </script>
 
 </body>

@@ -72,7 +72,7 @@ body {font-size:16px;}
       </p>
   </div>
 
-   <!-- Packages / Pricing Tables -->
+   <!-- System / Tables -->
    <div class="w3-container" id="packages" style="margin-top:75px">
     <h1 class="w3-xxxlarge w3-text"><b>System.</b></h1>
     <hr style="width:50px;border:5px solid #00477E" class="w3-round">
@@ -88,7 +88,7 @@ body {font-size:16px;}
         <li class="w3-padding-16">Offline Data Set</li>
 
         <li class="w3-light-grey w3-padding-24">
-          <button class="w3-button w3-highway-blue w3-padding-large w3-hover-black">Get App</button>
+          <button class="w3-button w3-highway-blue w3-padding-large w3-hover-black"onclick="goToStore()">Get App</button>
         </li>
       </ul>
     </div>
@@ -98,7 +98,7 @@ body {font-size:16px;}
         <li class="w3-highway-blue w3-xlarge w3-padding-32">Web App</li>
         <li class="w3-padding-16">Raw Data visualization</li>
         <li class="w3-padding-16">Data Graph Visualitaion</li>
-        <li class="w3-padding-16">Photography</li>
+        <li class="w3-padding-16">Projections from system dataset</li>
         <li class="w3-padding-16">Global Online Data Set</li>
 
         </li>
@@ -165,7 +165,11 @@ function onClick(element) {
 
 function goToApp(){
 
-  location.href = "graph.html";
+  location.href = "mid.html";
+}
+function goToStore(){
+
+location.href = "https://play.google.com/store/apps/details?id=de.bangle_bridge.bangle_bridge";
 }
 //Send Mail
 function sendEmail() {
