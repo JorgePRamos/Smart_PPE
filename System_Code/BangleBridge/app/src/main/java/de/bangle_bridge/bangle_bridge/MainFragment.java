@@ -503,7 +503,7 @@ public class MainFragment extends Fragment implements ServiceConnection, BtListe
     //Top Right Menu
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) { //Change drop Down menu to terminal options
-        inflater.inflate(R.menu.menu_terminal, menu);
+        inflater.inflate(R.menu.menu_main, menu);
 
     }
 
@@ -514,24 +514,7 @@ public class MainFragment extends Fragment implements ServiceConnection, BtListe
             receiveText.setText("");
             syncMongo();
             return true;
-        } else if (id == R.id.newline) { //New Line option
-            String[] newlineNames = getResources().getStringArray(R.array.newline_names);
-            String[] newlineValues = getResources().getStringArray(R.array.newline_values);
-            int pos = java.util.Arrays.asList(newlineValues).indexOf(newline);
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle("Newline");
-            builder.setSingleChoiceItems(newlineNames, pos, (dialog, item1) -> {
-                newline = newlineValues[item1];
-                dialog.dismiss();
-            });
-            builder.create().show();
-            return true;
-        } else if (id == R.id.TESTPAGE) {//Enable // Disable hex mode
-            Log.d("TestDebugging", "--->INTETN");
-            Intent myIntent = new Intent(this.getContext(), BangleDataView.class);
-            myIntent.putExtra("Model", model);
-            startActivity(myIntent);
-            return true;
+      
         } else {
             return super.onOptionsItemSelected(item);
         }

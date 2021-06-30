@@ -3,16 +3,8 @@
     android:screenOrientation="portrait"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/TESTPAGE"
-        android:title="TESTPAGE"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/clear"
         android:icon="@drawable/outline_sync_24"
         android:title="Clear"
         app:showAsAction="always" />
-    <item
-        android:id="@+id/newline"
-        android:title="Newline"
-        app:showAsAction="never" />
 </menu>

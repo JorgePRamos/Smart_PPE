@@ -288,7 +288,7 @@ public class DevicesFragment extends ListFragment {
         //transtion to terminal fragment with the data of the device clicked
         Bundle args = new Bundle();// Create transition bundle
         args.putString("device", device.getAddress());//Add device addres
-        Fragment fragment = new InputFragment();
+        Fragment fragment = new MainFragment();
         fragment.setArguments(args);
         getFragmentManager().beginTransaction().replace(R.id.fragment, fragment, "terminal").addToBackStack(null).commit();//transition to terminal fragmment
     }
