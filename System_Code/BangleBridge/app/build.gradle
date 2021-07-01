@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
 apply plugin: 'realm-android'
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
     defaultConfig {
-        targetSdkVersion 29
+        targetSdkVersion 30
         minSdkVersion 24
         vectorDrawables.useSupportLibrary true
 
         applicationId "de.bangle_bridge.bangle_bridge"
-        versionCode 1
-        versionName "1.0"
+        versionCode 4
+        versionName '4'
     }
 
     compileOptions {
