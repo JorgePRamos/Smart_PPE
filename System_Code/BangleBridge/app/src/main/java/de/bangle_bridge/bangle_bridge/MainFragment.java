@@ -29,6 +29,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -244,7 +245,8 @@ public class MainFragment extends Fragment implements ServiceConnection, BtListe
             public void onResult(App.Result<User> result) {
                 User usr = app.currentUser();
                 model.mongoUpMap(usr);
-
+                Toast toast = Toast.makeText(getContext(), "Sincronizado!", Toast.LENGTH_SHORT);
+                toast.show();
             }
 
             ;
@@ -514,7 +516,7 @@ public class MainFragment extends Fragment implements ServiceConnection, BtListe
             receiveText.setText("");
             syncMongo();
             return true;
-      
+
         } else {
             return super.onOptionsItemSelected(item);
         }

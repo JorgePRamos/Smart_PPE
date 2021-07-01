@@ -2,7 +2,9 @@ package data;
 
 
 import android.util.Log;
+import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
@@ -17,6 +19,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
+import de.bangle_bridge.bangle_bridge.R;
 import io.realm.mongodb.User;
 import io.realm.mongodb.mongo.MongoClient;
 import io.realm.mongodb.mongo.MongoCollection;
@@ -36,7 +39,7 @@ public class Model implements Serializable {
     public Measurement lastInsert = null;
     private String lastUpload = "2021-04-29T00:00:00.000Z";
     private User usr;
-
+    private String templastUpload = "2021-04-29T00:00:00.000Z";
     public Model(String workerID) {
         measurements = new TreeMap<String, Measurement>();
         this.workerID = workerID;
@@ -86,6 +89,7 @@ public class Model implements Serializable {
     public void mongoUpMap(User usr) {
 
         Log.d("MONGO", "Mongo upMap");
+        Log.d("MONGO","------- Number  Map -------> "+ measurements.size());
         MongoClient mongoClient = usr.getMongoClient("mongodb-atlas");
         MongoDatabase mongoDatabase =
                 mongoClient.getDatabase("MeasurementsDB");
@@ -122,17 +126,24 @@ public class Model implements Serializable {
                     }
                     sortenMap = measurements.tailMap(lastUpload);
                     sortenMap.remove(lastUpload);
+                    measurements = null;
+                    measurements = new TreeMap<String, Measurement>();
                     Log.v("MONGO", "-->successfully found a document: " + result + "\n Numeber in sorterd-->" + sortenMap.size());
                     for (HashMap.Entry<String, Measurement> m : sortenMap.entrySet()) {
                         Log.d("MONGO", "shorted map #### " + m.getKey() + "\n");
                     }
 
                 } else {
+                    Log.d("MONGO","------- Number  Map -------> "+ measurements.size());
                     for (HashMap.Entry<String, Measurement> m : measurements.entrySet()) {
-                        Log.d("MONGO", "Mess---> " + m.getKey() + "\n");
+                        Log.d("MONGO", "Mess_F---> " + m.getKey() + "\n");
                     }
 
                     sortenMap = measurements;
+                    Log.d("MONGO","******* PRE CLEAR Number Shorted Map*******> "+ sortenMap.size());
+                    measurements = null;
+                    measurements = new TreeMap<String, Measurement>();
+                    Log.d("MONGO","******* POST CLEAR Number Shorted Map*******> "+ sortenMap.size());
                     Log.d("MONGO", "## Result null: " + result + "\nNumeber in Meassuremap-->" + measurements.size());
                     for (HashMap.Entry<String, Measurement> m : sortenMap.entrySet()) {
                         Log.d("MONGO", "shorted map #### " + m.getKey() + "\n");
@@ -144,7 +155,8 @@ public class Model implements Serializable {
             }
 
             HashMap<String, Measurement> cropedmeasurements = null;
-
+            Log.d("MONGO","------- Number  Map -------> "+ measurements.size());
+            Log.d("MONGO","******* Number Shorted Map*******> "+ sortenMap.size());
             List<Document> documents = new ArrayList<>();
             for (HashMap.Entry<String, Measurement> kv : sortenMap.entrySet()) {//change to cropped
                 Document doc = new Document();
@@ -161,7 +173,7 @@ public class Model implements Serializable {
 
                 Log.d("MONGO", "****> " + doc.toString());
 
-                lastUpload = kv.getKey();
+                templastUpload = kv.getKey();
                 documents.add(doc);
             }
 
@@ -169,8 +181,13 @@ public class Model implements Serializable {
             mess.insertMany(documents).getAsync(task2 -> {
                 if (task2.isSuccess()) {
                     Log.v("MONGO", "successfully inserted a document  " + task2.get());
+                    lastUpload = templastUpload;
+                    int size = measurements.size();
+                    Log.d("MONGO","******* Number Map*******> "+ size);
                 } else {
                     Log.e("MONGO", "failed to insert documents with: " + task2.getError().getErrorMessage());
+                    int size = measurements.size();
+                    Log.d("MONGO","******* Number Map*******> "+ size);
                 }
             });
         });

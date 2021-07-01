@@ -332,27 +332,38 @@ public class Measurement implements Serializable {
             Double lon = 0.0;
             Double alt = 0.0;
             Double speed = 0.0;
-            try {
 
 
-                if ((lat = mess4.getDouble("lat")) == null) {
+                try {
+                    if ((lat = mess4.getDouble("lat")) == null) {
+                        lat = 0.0;
+                    }
+                }catch (org.json.JSONException e){
                     lat = 0.0;
                 }
+                try{
                 if ((lon = mess4.getDouble("lon")) == null) {
                     lon = 0.0;
                 }
+                }catch (org.json.JSONException e){
+                    lon = 0.0;
+                }
+                try{
                 if ((alt = mess4.getDouble("alt")) == null) {
                     alt = 0.0;
                 }
+                }catch (org.json.JSONException e){
+                    alt = 0.0;
+                }
+                try{
                 if ((speed = mess4.getDouble("speed")) == null) {
                     speed = 0.0;
                 }
+                }catch (org.json.JSONException e){
+                    speed = 0.0;
+                }
 
-            } catch (JSONException e) {
-                Log.d("JsonNull", "No hay Gps");
-                e.printStackTrace();
 
-            }
             Gps gpstemp = new Gps(lat, lon, alt, speed);
             //Clean up time
             String og = (mess4.getString("time"));
